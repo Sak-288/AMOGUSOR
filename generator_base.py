@@ -2,12 +2,8 @@ from PIL import Image, ImageDraw
 import time
 import numpy as np
 
-img = Image.open("doggo.jpg")
-
-img_width, img_height = img.size
-
 # Drawing ONE Amogus Pattern
-def amogus_pattern(w, h, spawn_x, spawn_y, width, height):
+def amogus_pattern(img, w, h, spawn_x, spawn_y, width, height):
     # Variable settings | Dimensions
     area = w * h
     spawn = (spawn_x, spawn_y) 
@@ -66,18 +62,16 @@ def amogus_pattern(w, h, spawn_x, spawn_y, width, height):
                     img.putpixel((x, y), darker_color_avg)
 
 # Repeating pattern all over the image
-def blur_image(chunk_size, width, height):
+def blur_image(frame, chunk_size, width, height):
+    img = Image.open(frame)
+
     chunkH = chunk_size
     chunkW = chunk_size
 
+    img_width, img_height = img.size
+
     for x in range(0, width + 1, chunk_size):
         for y in range(0, height + 1, chunk_size):
-            amogus_pattern(chunkW, chunkH, x, y, width, height)
+            amogus_pattern(img, chunkW, chunkH, x, y, img_width, img_height)
 
-    img.show()
-
-
-resolution = 0
-while resolution > img_width / 4 or resolution < 4:
-    resolution = int(input('Resolution : '))
-blur_image(resolution, img_width, img_height)
+    return img
