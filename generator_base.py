@@ -4,6 +4,7 @@ import numpy as np
 
 # Drawing ONE Amogus Pattern
 def amogus_pattern(img, w, h, spawn_x, spawn_y, width, height):
+    start = time.perf_counter()
     # Variable settings | Dimensions
     area = w * h
     spawn = (spawn_x, spawn_y) 
@@ -60,9 +61,14 @@ def amogus_pattern(img, w, h, spawn_x, spawn_y, width, height):
                     img.putpixel((x, y), lighter_color_avg)
                 elif e is False and (b is True or l is True):
                     img.putpixel((x, y), darker_color_avg)
+    
+    end = time.perf_counter()
+    elapsed = end - start
+    print(f"AMOGUS_PATTERN MADE after {elapsed}")
 
 # Repeating pattern all over the image
 def blur_image(frame, chunk_size, width, height):
+    start = time.perf_counter()
     img = Image.open(frame)
 
     chunkH = chunk_size
@@ -74,4 +80,11 @@ def blur_image(frame, chunk_size, width, height):
         for y in range(0, height + 1, chunk_size):
             amogus_pattern(img, chunkW, chunkH, x, y, img_width, img_height)
 
+    end = time.perf_counter()
+    elapsed = end - start
+    print(f"BLURRED IMAGE MADE after {elapsed}")
+    img.show() # Temporarily Testing
     return img
+
+img = Image.open('extracted_frames/frame_000124.jpg')
+blur_image("extracted_frames/frame_000124.jpg", 64, img.size[0], img.size[1])
