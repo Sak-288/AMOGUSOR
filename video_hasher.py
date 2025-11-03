@@ -2,7 +2,7 @@ import cv2
 import os
 import moviepy
 from moviepy import VideoFileClip
-from generator_base import blur_image
+from pregened_generator import blur_image
 import numpy as np
 
 

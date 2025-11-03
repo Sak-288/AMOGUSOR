@@ -33,13 +33,13 @@ def amogus_pattern(img, w, h, spawn_x, spawn_y, width, height):
     green_total = 0
     blue_total = 0
 
+
     for x in range(spawn[0], end[0] + 1):
         for y in range(spawn[1], end[1] + 1):
             if x < width and y < height: # Mandatory vibe check
                 color = img.getpixel((x, y))
-                red_total += color[0]
-                green_total += color[1]
-                blue_total += color[2]
+                red_total, green_total, blue_total = color
+
 
     # Computing the RGB averages
     R_avg = int(red_total / area)
@@ -64,7 +64,6 @@ def amogus_pattern(img, w, h, spawn_x, spawn_y, width, height):
 
 # Repeating pattern all over the image
 def blur_image(frame, chunk_size):
-    start = time.perf_counter()
     img = Image.open(frame)
 
     chunkH = chunk_size
@@ -75,8 +74,8 @@ def blur_image(frame, chunk_size):
     for x in range(0, img_width + 1, chunk_size):
         for y in range(0, img_height + 1, chunk_size):
             amogus_pattern(img, chunkW, chunkH, x, y, img_width, img_height)
-        
-    end = time.perf_counter()
-    elap = end - start
-    print(elap, elap * 124)
-    return img
+
+    img.show()
+    
+
+blur_image("paloumet.jpg", 16)

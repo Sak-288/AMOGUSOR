@@ -97,5 +97,3 @@ def iterate():
                     end = time.perf_counter()
                     elapsed = end - start
                     print(f'Amogus number {i} made after {elapsed}')
-
-iterate()
