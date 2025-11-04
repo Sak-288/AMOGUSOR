@@ -4,7 +4,7 @@ import time
 import numpy as np
 import os
 
-sizes = [8, 16, 24, 32, 40, 48, 56, 64]
+sizes = [8, 12, 16, 32, 48, 64]
 
 def create_blank(width, height):
     blank = Image.new("RGB", (width, height), color=(255, 255, 255))
@@ -21,21 +21,21 @@ def amogus_pattern(img, w, h, spawn_x=0, spawn_y=0, color=(0, 0, 0)):
     color_avg = color
     r_avg, g_avg, b_avg = color_avg
     lighter_color_avg = (int(r_avg * 5/4), int(g_avg * 5/4), int(b_avg * 5/4))
-    darker_color_avg = (int(r_avg * 3/4), int(g_avg * 3/4), int(b_avg * 3/4))
+    darker_color_avg = (int(r_avg * 7/8), int(g_avg * 7/8), int(b_avg * 7/8))
 
     # Dead Zones Booleans | The shape of the Amogus
     def check_dead_zones(x, y):
-        if x <= int(spawn[0] + 1/4 * w) and (y <= int(spawn[1] + 1/4 * h) or y >= int(spawn[1] + 3/4 * h)):
+        if x <= int(spawn[0] + 1/4 * w) and (y <= int(spawn[1] + 1/8 * h) or y >= int(spawn[1] + 5/8 * h)):
             isBackpack = True
         else:
             isBackpack = False
 
-        if x >= int(spawn[0] + 1/2 * w) and x <= int(end[0]) and y >= int(spawn[1] + 1/8 * h) and y <= int(spawn[1] + 3/8 * h):
+        if x >= int(spawn[0] + 1/2 * w) and x <= int(end[0]) and y >= int(spawn[1] + 1/8 * h) and y <= int(spawn[1] + 1/4 * h):
             isEyes = True
         else:
             isEyes = False     
 
-        if x >= int(spawn[0] + 1/2 * w) and x <= int(spawn[0] + 3/4 * w) and y >= int(spawn[1] + 7/8 * h) and y <= int(end[1]):
+        if x >= int(spawn[0] + 1/2 * w) and x <= int(spawn[0] + 3/4 * w) and y >= int(spawn[1] + 3/4 * h) and y <= int(end[1]):
             isLegspace = True
         else:
             isLegspace = False
@@ -85,7 +85,7 @@ def iterate():
     i = 0
     if not os.path.exists("pre_gen_amogus"):
         os.makedirs("pre_gen_amogus")
-    for size in range(8, 65, 8):
+    for size in sizes:
         for r in range(0, 256, 16):
             for g in range(0, 256, 16):
                 for b in range(0, 256, 16):
@@ -96,4 +96,5 @@ def iterate():
                     cv2.imwrite(img_path, np.asarray(img))
                     end = time.perf_counter()
                     elapsed = end - start
-                    print(f'Amogus number {i} made after {elapsed}')
+                    print(f'Amogus number {i} created after {elapsed}')
+

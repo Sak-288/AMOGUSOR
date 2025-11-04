@@ -1,9 +1,11 @@
 import cv2
+from cv2 import VideoCapture
 import os
 import moviepy
 from moviepy import VideoFileClip
 from pregened_generator import blur_image
 import numpy as np
+import threading
 
 
 def extract_audio(mp4_file, mp3_file, output_folder):
@@ -40,7 +42,7 @@ def extract_frames_and_audio(video_path, output_folder):
     fps = cap.get(cv2.CAP_PROP_FPS)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    
+
     # Read and save each frame
     frame_count = 0
     while True:
@@ -52,7 +54,7 @@ def extract_frames_and_audio(video_path, output_folder):
         # Save frame as image
         frame_filename = os.path.join(output_folder, f"frame_{frame_count:06d}.jpg")
         cv2.imwrite(frame_filename, frame)
-        
+
         frame_count += 1
 
     # Audio extraction
@@ -70,7 +72,7 @@ def combine_audio(video_name, audio_name, output_file, fps=30):
 
 def create_video_from_images(output_video_path, image_folder="extracted_frames", fps=30):
     # Launching the initial function
-    fps = extract_frames_and_audio("video.mp4", image_folder)
+    fps = extract_frames_and_audio("test.mp4", image_folder)
 
     # Read first image to get dimensions
     first_image_path = os.path.join(image_folder, os.listdir(image_folder)[0])
@@ -81,16 +83,18 @@ def create_video_from_images(output_video_path, image_folder="extracted_frames",
     temp_images = [img for img in os.listdir(image_folder) if img.endswith((".jpg", ".jpeg", ".png"))]
     temp_images.sort() # Sort alphanumerically
     # images = [blur_image(os.path.join(image_folder, img), resolution, width, height) for img in temp_images]
-    
+               
     # Define video writer
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Codec for MP4
-    video_writer = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))    
-    
+    video_writer = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
+                                                   
     # Write each image to video
     resolution = int(input('Resolution : '))
+    i = 0
     for image in temp_images:
+        i += 1
         image_path = os.path.join(image_folder, image)
-        video_writer.write(np.asarray(blur_image(image_path, resolution)))
+        video_writer.write(np.array((blur_image(image_path, resolution))))
     
     video_writer.release()
 

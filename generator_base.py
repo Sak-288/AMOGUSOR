@@ -78,4 +78,4 @@ def blur_image(frame, chunk_size):
     img.show()
     
 
-blur_image("paloumet.jpg", 16)
+blur_image("youssef.jpg", 4)
