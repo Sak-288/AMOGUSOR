@@ -8,7 +8,10 @@ import random as rd
 from concurrent.futures import ThreadPoolExecutor
 import functools
 
+# Checking if we have all the pregen'ed amoguses in the directory
 if not os.path.exists("pre_gen_amogus"):
+    iterate()
+elif not os.listdir("pre_gen_amogus"):
     iterate()
 
 # Cache for pre-loaded images
@@ -41,8 +44,6 @@ def patch(base_image, res, spawn_x, spawn_y):
     end_y = min(spawn_y + res, height)
     actual_res_x = end_x - spawn_x
     actual_res_y = end_y - spawn_y
-
-    print(f'height : {height} and width : {width}')
     
     # Vectorized sampling for much faster color averaging
     sample_size = min(actual_res_x * actual_res_y, 100) # Limit sample sizesample_size
