@@ -38,7 +38,9 @@ def amogus_pattern(img, w, h, spawn_x, spawn_y, width, height):
         for y in range(spawn[1], end[1] + 1):
             if x < width and y < height: # Mandatory vibe check
                 color = img.getpixel((x, y))
-                red_total, green_total, blue_total = color
+                red_total += color[0]
+                green_total += color[1]
+                blue_total += color[2]
 
 
     # Computing the RGB averages
@@ -78,4 +80,4 @@ def blur_image(frame, chunk_size):
     img.show()
     
 
-blur_image("youssef.jpg", 4)
+blur_image("youssef.jpg", 8)
