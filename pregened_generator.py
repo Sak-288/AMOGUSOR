@@ -95,7 +95,7 @@ def blur_image(base_image, resolution):
 
     # This is my last attempt (yet, maybe more in the future at optimization, and the biggest one so far) : what if we didn't do duplicate frames multiples times ?
     # Multiple frames in a row can be (and usually are) duplicates
-    result_path = "last_relevant.npy"
+    """result_path = "last_relevant.npy"
     second_rp = "last_relevant_key.npy"
     if os.path.exists(result_path) and os.path.exists(second_rp):
         with open(second_rp, 'r', encoding="utf-8") as f:
@@ -110,6 +110,6 @@ def blur_image(base_image, resolution):
     else:
         np.save(result_path, result)
         with open(second_rp, 'w', encoding="utf-8") as f:
-                f.write(str(base_image))
+                f.write(str(base_image))"""
 
-        return result_path
+    return result
