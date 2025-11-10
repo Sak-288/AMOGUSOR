@@ -5,6 +5,9 @@ from PIL import Image
 
 dir_path = "extracted_frames/"
 
+if not os.path.exists(dir_path):
+    os.makedirs(dir_path)
+
 images = [img for img in os.listdir(dir_path)]
 images.sort()
 

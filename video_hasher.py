@@ -10,22 +10,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import tempfile
 from collections import OrderedDict
 
-# Add this at the beginning of your script
-def cleanup_old_files():
-    """Clean up any leftover temporary files from previous runs"""
-    import glob
-    patterns = ["temp_result_*.npy", "last_result.npy", "global_variables.json"]
-    for pattern in patterns:
-        files = glob.glob(pattern)
-        for file in files:
-            try:
-                os.remove(file)
-            except:
-                pass
-
-# Call this before starting video processing
-cleanup_old_files()
-
 def extract_audio(mp4_file, mp3_file, output_folder):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
@@ -45,7 +29,6 @@ def extract_frames_fast(video_path, output_folder):
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     fps = cap.get(cv2.CAP_PROP_FPS)
     
-    # Extract frames efficiently
     frame_count = 0
     while True:
         ret, frame = cap.read()
@@ -58,7 +41,6 @@ def extract_frames_fast(video_path, output_folder):
     
     cap.release()
     
-    # Extract audio in background thread
     audio_thread = threading.Thread(target=extract_audio, 
                                   args=(video_path, "video.mp3", output_folder))
     audio_thread.start()
@@ -70,65 +52,27 @@ def process_single_frame(args):
     frame_name, image_folder, resolution, width, height = args
     image_path = os.path.join(image_folder, frame_name)
     
-    try:
-        # Validate input file exists and has content
-        if not os.path.exists(image_path) or os.path.getsize(image_path) == 0:
-            print(f"Warning: Empty or missing frame {frame_name}")
-            raise ValueError("Invalid frame file")
+    # Validate input file exists and has content
+    if not os.path.exists(image_path) or os.path.getsize(image_path) == 0:
+        print(f"Warning: Empty or missing frame {frame_name}")
+        raise ValueError("Invalid frame file")
         
-        # Process the frame
-        result_path = blur_image(image_path, resolution)
-        
-        # Load and validate the result
-        if not os.path.exists(result_path) or os.path.getsize(result_path) == 0:
-            print(f"Warning: Empty result for {frame_name}")
-            raise ValueError("Invalid result file")
-            
+    # Process the frame
+    result =  blur_image(image_path, resolution)
+    if type(result) is str:
+        result_path = result
+
         processed_frame = np.load(result_path)
-        
-        # Validate the loaded array
-        if processed_frame.size == 0:
-            print(f"Warning: Empty array for {frame_name}")
-            raise ValueError("Empty array")
-        
-        # Ensure correct data type
-        if processed_frame.dtype != np.uint8:
-            processed_frame = processed_frame.astype(np.uint8)
-        
-        # Handle different array shapes
-        if len(processed_frame.shape) == 2:  # Grayscale
-            processed_frame = cv2.cvtColor(processed_frame, cv2.COLOR_GRAY2BGR)
-        elif processed_frame.shape[2] == 4:  # RGBA
-            processed_frame = cv2.cvtColor(processed_frame, cv2.COLOR_RGBA2BGR)
-        elif len(processed_frame.shape) != 3 or processed_frame.shape[2] != 3:
-            print(f"Warning: Unexpected shape {processed_frame.shape} for {frame_name}")
-            # Force reshape to expected dimensions
-            processed_frame = processed_frame.reshape(height, width, 3)
-        
-        # Resize if dimensions don't match
-        if processed_frame.shape[:2] != (height, width):
-            try:
-                processed_frame = cv2.resize(processed_frame, (width, height))
-            except Exception as resize_error:
-                print(f"Resize failed for {frame_name}: {resize_error}")
-                # Create blank frame as fallback
-                processed_frame = np.zeros((height, width, 3), dtype=np.uint8)
-        
-        # Final validation
-        if processed_frame.shape != (height, width, 3):
-            print(f"Final shape mismatch for {frame_name}: {processed_frame.shape}")
-            processed_frame = np.zeros((height, width, 3), dtype=np.uint8)
-        
-        # Extract frame number for ordering
+        processed_frame = cv2.cvtColor(processed_frame, cv2.COLOR_RGBA2BGR)
+
+        frame_num = int(frame_name.split('_')[1].split('.')[0])
+        return frame_num, processed_frame
+    else:
+        processed_frame = cv2.cvtColor(processed_frame, cv2.COLOR_RGBA2BGR)
+
         frame_num = int(frame_name.split('_')[1].split('.')[0])
         return frame_num, processed_frame
         
-    except Exception as e:
-        print(f"Error processing {frame_name}: {e}")
-        # Create a validated blank frame
-        blank_frame = np.zeros((height, width, 3), dtype=np.uint8)
-        frame_num = int(frame_name.split('_')[1].split('.')[0])
-        return frame_num, blank_frame
 
 def create_video_from_images_optimized(output_video_path, image_folder="extracted_frames", fps=30):
     # Extract frames and get metadata
@@ -142,12 +86,7 @@ def create_video_from_images_optimized(output_video_path, image_folder="extracte
             first_frame_path = test_path
             break
     
-    if not first_frame_path:
-        raise ValueError("No valid frames found!")
-    
     first_frame = cv2.imread(first_frame_path)
-    if first_frame is None:
-        raise ValueError("Could not read first frame")
     
     height, width = first_frame.shape[:2]
     print(f"Video dimensions: {width}x{height}")
@@ -164,11 +103,7 @@ def create_video_from_images_optimized(output_video_path, image_folder="extracte
     # Filter out potentially corrupted frames
     valid_images = []
     for img in temp_images:
-        img_path = os.path.join(image_folder, img)
-        if os.path.getsize(img_path) > 0:
-            valid_images.append(img)
-        else:
-            print(f"Skipping empty frame: {img}")
+        valid_images.append(img)
     
     print(f"Found {len(valid_images)} valid frames out of {len(temp_images)} total")
     
@@ -176,7 +111,6 @@ def create_video_from_images_optimized(output_video_path, image_folder="extracte
     
     print(f"Processing {len(valid_images)} frames with resolution {resolution}...")
     
-    # Use smaller batch size to reduce memory pressure
     batch_size = min(4, len(valid_images) // (os.cpu_count() or 1))
     frames_processed = 0
     
@@ -213,26 +147,22 @@ def create_video_from_images_optimized(output_video_path, image_folder="extracte
     
     video_writer.release()
     
-    # Wait for audio extraction to complete
     audio_thread.join()
     
     print("Video writing completed!")
-    
-    # Clean up temporary files
-    cleanup_temp_files()
-    
+
+    def combine_audio(video_name, audio_name, output_file, fps=30):
+        my_clip = moviepy.VideoFileClip(video_name)                                                 
+        audio_background = moviepy.AudioFileClip(audio_name)
+        """Audio combination"""
+        my_clip = VideoFileClip(video_name)
+        audio_background = AudioFileClip(audio_name)
+        final_clip = my_clip.with_audio(audio_background)
+        final_clip.write_videofile(output_file,fps=fps)
+
     # Mixing audio
     combine_audio(output_video_path, "video.mp3", "final_version.mp4", fps=fps)
 
-    def cleanup_temp_files():
-        """Clean up temporary numpy files"""
-        import glob
-        temp_files = glob.glob("temp_result_*.npy") + glob.glob("last_result.npy")
-        for temp_file in temp_files:
-            try:
-                os.remove(temp_file)
-            except:
-                pass
 
 # TESTING
 create_video_from_images_optimized("final_video.mp4", "extracted_frames")
