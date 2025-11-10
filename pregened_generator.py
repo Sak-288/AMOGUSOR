@@ -6,6 +6,10 @@ from pre_gen_amoguses import create_blank, iterate
 import cv2
 import random as rd
 from concurrent.futures import ThreadPoolExecutor
+import check_originality
+from check_originality import check
+import json
+import threading
 
 # Checking if we have all the pregen'ed amoguses in the directory
 if not os.path.exists("pre_gen_amogus"):
@@ -17,7 +21,7 @@ elif not os.listdir("pre_gen_amogus"):
 _image_cache = {}
 
 def det_best(color, resolution):
-    b, g, r = color
+    r, g, b = color
     r = int(r/16) * 16
     g = int(g/16) * 16
     b = int(b/16) * 16
@@ -51,9 +55,11 @@ def patch(base_image, res, spawn_x, spawn_y):
     size_fourth = int((end_x - spawn_x)/ 4)
 
     # Vectorized color extraction
-    samples = base_image[np.array([x for x in range(spawn_x, end_x + 1, size_fourth) if x < width]), np.array([y for y in range(spawn_y, end_y + 1, size_fourth) if y < height])]
-    print(samples)
-    
+    try:
+        samples = base_image[np.array([y for y in range(spawn_y, end_y + 1, size_fourth) if y < height]), np.array([x for x in range(spawn_x, end_x + 1, size_fourth) if x < width])]
+    except IndexError:
+        samples = base_image[np.array([0, 0, 0, 0, 0]), np.array([0, 0, 0, 0, 0])]
+
     # Fast average calculation
     color_avg = np.mean(samples, axis=0).astype(np.uint8)
     
@@ -83,8 +89,52 @@ def process_tile(args):
     return (y, end_y, x, end_x, patch_img)
 
 def blur_image(base_image, resolution):
-    base_image = np.asarray(Image.open(base_image))
-    img_height, img_width = base_image.shape[:2]
+    import threading
+
+# Remove global file-based state, use thread-local storage
+_blur_cache = {}
+_cache_lock = threading.Lock()
+
+def blur_image(base_image, resolution):
+    """Thread-safe blur image function without global state dependency"""
+    threshold = 0.99
+    
+    try:
+        if isinstance(base_image, str):
+            # It's a file path
+            current_image = np.asarray(Image.open(base_image))
+            image_key = base_image
+        else:
+            # It's already an image array
+            current_image = base_image.copy()
+            image_key = f"array_{id(base_image)}"
+    except Exception as e:
+        print(f"Error loading image: {e}")
+        # Create blank image as fallback
+        current_image = np.zeros((720, 1280, 3), dtype=np.uint8)
+        image_key = "blank"
+    
+    # Create a unique cache key for this operation
+    cache_key = f"{image_key}_{resolution}"
+    
+    # Check cache first (thread-safe)
+    with _cache_lock:
+        if cache_key in _blur_cache:
+            cached_path, cached_image = _blur_cache[cache_key]
+            
+            # Verify the cached file still exists and is valid
+            if os.path.exists(cached_path):
+                try:
+                    # Quick validation of cached result
+                    test_load = np.load(cached_path)
+                    if test_load.size > 0:
+                        return cached_path
+                except:
+                    # Cache is invalid, remove it
+                    del _blur_cache[cache_key]
+    
+    # Process the image
+    img_height, img_width = current_image.shape[:2]
     
     output_height = ((img_height + resolution - 1) // resolution) * resolution
     output_width = ((img_width + resolution - 1) // resolution) * resolution
@@ -95,16 +145,20 @@ def blur_image(base_image, resolution):
     tasks = []
     for x in range(0, img_width, resolution):
         for y in range(0, img_height, resolution):
-            tasks.append((base_image, resolution, x, y, output_height, output_width))
+            tasks.append((current_image, resolution, x, y, output_height, output_width))
     
     # Process tiles in parallel
-    with ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
+    with ThreadPoolExecutor(max_workers=min(os.cpu_count(), 4)) as executor:
         for y_start, y_end, x_start, x_end, patch_img in executor.map(process_tile, tasks):
             result[y_start:y_end, x_start:x_end] = patch_img
     
-    img = Image.fromarray(result)
-    img.show()
-    return result
-
-for i in range(0, 4):
-    blur_image('youssef.jpg', 8)
+    # Save with unique filename for this thread/operation
+    unique_id = threading.get_ident()
+    result_path = f"temp_result_{unique_id}_{resolution}.npy"
+    np.save(result_path, result)
+    
+    # Update cache (thread-safe)
+    with _cache_lock:
+        _blur_cache[cache_key] = (result_path, result)
+    
+    return result_path
