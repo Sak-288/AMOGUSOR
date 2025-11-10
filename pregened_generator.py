@@ -6,7 +6,6 @@ from pre_gen_amoguses import create_blank, iterate
 import cv2
 import random as rd
 from concurrent.futures import ThreadPoolExecutor
-import functools
 
 # Checking if we have all the pregen'ed amoguses in the directory
 if not os.path.exists("pre_gen_amogus"):
