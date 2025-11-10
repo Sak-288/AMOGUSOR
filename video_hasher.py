@@ -36,7 +36,7 @@ def extract_frames_fast(video_path, output_folder):
             break
         
         cv2.imwrite(os.path.join(output_folder, f"frame_{frame_count:06d}.jpg"), frame, 
-                   [cv2.IMWRITE_JPEG_QUALITY, 85])
+                [cv2.IMWRITE_JPEG_QUALITY, 85])
         frame_count += 1
     
     cap.release()
@@ -48,52 +48,58 @@ def extract_frames_fast(video_path, output_folder):
     return int(fps), total_frames, audio_thread
 
 def process_single_frame(args):
-    """Process a single frame with robust error handling and validation"""
     frame_name, image_folder, resolution, width, height = args
     image_path = os.path.join(image_folder, frame_name)
-    
+
     # Validate input file exists and has content
     if not os.path.exists(image_path) or os.path.getsize(image_path) == 0:
         print(f"Warning: Empty or missing frame {frame_name}")
         raise ValueError("Invalid frame file")
         
     # Process the frame
-    result =  blur_image(image_path, resolution)
+    result = blur_image(image_path, resolution)
+    
     if type(result) is str:
         result_path = result
-
         processed_frame = np.load(result_path)
         processed_frame = cv2.cvtColor(processed_frame, cv2.COLOR_RGBA2BGR)
-
-        frame_num = int(frame_name.split('_')[1].split('.')[0])
-        return frame_num, processed_frame
     else:
-        processed_frame = cv2.cvtColor(processed_frame, cv2.COLOR_RGBA2BGR)
+        processed_frame = cv2.cvtColor(result, cv2.COLOR_RGBA2BGR)
 
-        frame_num = int(frame_name.split('_')[1].split('.')[0])
-        return frame_num, processed_frame
-        
+    # Resize frame to match original video dimensions
+    if processed_frame.shape[:2] != (height, width):
+        processed_frame = cv2.resize(processed_frame, (width, height))
+    
+    frame_num = int(frame_name.split('_')[1].split('.')[0])
+    return frame_num, processed_frame
+
+def combine_audio(video_name, audio_name, output_file, fps=30):
+    """Audio combination"""
+    my_clip = VideoFileClip(video_name)
+    audio_background = AudioFileClip(audio_name)
+    final_clip = my_clip.with_audio(audio_background)
+    final_clip.write_videofile(output_file, fps=fps, verbose=False, logger=None)
+    my_clip.close()
+    audio_background.close()
 
 def create_video_from_images_optimized(output_video_path, image_folder="extracted_frames", fps=30):
     # Extract frames and get metadata
     fps, total_frames, audio_thread = extract_frames_fast("test.mp4", image_folder)
     
     # Get dimensions from first valid frame
-    first_frame_path = None
-    for i in range(100):  # Check first 100 frames
-        test_path = os.path.join(image_folder, f"frame_{i:06d}.jpg")
-        if os.path.exists(test_path) and os.path.getsize(test_path) > 0:
-            first_frame_path = test_path
-            break
-    
+    first_frame_path = "extracted_frames/frame_000000.jpg"
     first_frame = cv2.imread(first_frame_path)
     
     height, width = first_frame.shape[:2]
     print(f"Video dimensions: {width}x{height}")
 
-    # Define video writer
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    # Define video writer with proper settings
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     video_writer = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
+    
+    if not video_writer.isOpened():
+        print("Error: Could not open video writer")
+        return
     
     # Get and sort images
     temp_images = [img for img in os.listdir(image_folder) 
@@ -101,9 +107,7 @@ def create_video_from_images_optimized(output_video_path, image_folder="extracte
     temp_images.sort()
     
     # Filter out potentially corrupted frames
-    valid_images = []
-    for img in temp_images:
-        valid_images.append(img)
+    valid_images = [x for x in temp_images]
     
     print(f"Found {len(valid_images)} valid frames out of {len(temp_images)} total")
     
@@ -126,13 +130,16 @@ def create_video_from_images_optimized(output_video_path, image_folder="extracte
             # Submit all tasks
             future_to_frame = {executor.submit(process_single_frame, args): args[0] 
                              for args in frame_args}
-            
+
             # Collect results for this batch
             batch_results = []
             for future in as_completed(future_to_frame):
                 try:
                     frame_num, processed_frame = future.result()
                     if processed_frame is not None:
+                        # Ensure frame has correct dimensions and type
+                        if processed_frame.dtype != np.uint8:
+                            processed_frame = processed_frame.astype(np.uint8)
                         batch_results.append((frame_num, processed_frame))
                 except Exception as e:
                     print(f"Future result error: {e}")
@@ -140,29 +147,25 @@ def create_video_from_images_optimized(output_video_path, image_folder="extracte
             # Sort this batch by frame number and write in correct order
             batch_results.sort(key=lambda x: x[0])
             for frame_num, processed_frame in batch_results:
-                video_writer.write(processed_frame)
-                frames_processed += 1
-                if frames_processed % 50 == 0:  # Progress update every 50 frames
-                    print(f'Frame {frames_processed}/{len(valid_images)} processed')
+                try:
+                    video_writer.write(processed_frame)
+                    frames_processed += 1
+                    if frames_processed % 50 == 0:  # Progress update every 50 frames
+                        print(f'Frame {frames_processed}/{len(valid_images)} processed')
+                except Exception as e:
+                    print(f"Error writing frame {frame_num}: {e}")
     
     video_writer.release()
+    print("Video writing completed!")
     
+    # Wait for audio extraction to finish
     audio_thread.join()
     
-    print("Video writing completed!")
-
-    def combine_audio(video_name, audio_name, output_file, fps=30):
-        my_clip = moviepy.VideoFileClip(video_name)                                                 
-        audio_background = moviepy.AudioFileClip(audio_name)
-        """Audio combination"""
-        my_clip = VideoFileClip(video_name)
-        audio_background = AudioFileClip(audio_name)
-        final_clip = my_clip.with_audio(audio_background)
-        final_clip.write_videofile(output_file,fps=fps)
-
-    # Mixing audio
+    # Mix audio with video
+    print("Combining audio with video...")
     combine_audio(output_video_path, "video.mp3", "final_version.mp4", fps=fps)
-
+    
+    print("Process completed successfully!")
 
 # TESTING
 create_video_from_images_optimized("final_video.mp4", "extracted_frames")

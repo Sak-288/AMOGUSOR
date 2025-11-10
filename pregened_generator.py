@@ -70,10 +70,9 @@ def process_tile(args):
     return (y, end_y, x, end_x, patch_img)
 
 def blur_image(base_image, resolution):
-    threshold = 0.9
+    threshold = 0.9999
     
-    current_image = np.asarray(Image.open(base_image))
-    image_key = base_image
+    current_image = np.array(Image.open(base_image))
     
     # Process the image
     img_height, img_width = current_image.shape[:2]
@@ -96,14 +95,21 @@ def blur_image(base_image, resolution):
 
     # This is my last attempt (yet, maybe more in the future at optimization, and the biggest one so far) : what if we didn't do duplicate frames multiples times ?
     # Multiple frames in a row can be (and usually are) duplicates
-    result_path = f"last_relevant.npy"
-    if os.path.exists(result_path):
-        if check(base_image, result_path) < threshold:
+    result_path = "last_relevant.npy"
+    second_rp = "last_relevant_key.npy"
+    if os.path.exists(result_path) and os.path.exists(second_rp):
+        with open(second_rp, 'r', encoding="utf-8") as f:
+            last_image = f.read().strip()
+        if check(last_image, base_image) < threshold: # Remember : ssim_score is between 0 and 1 + the last image is the first arg
+            np.save(result_path, result)
+            with open(second_rp, 'w', encoding="utf-8") as f:
+                f.write(str(base_image))
             return result
         else:
-            np.save(result_path, result)
             return result_path
     else:
         np.save(result_path, result)
-        return result_path
+        with open(second_rp, 'w', encoding="utf-8") as f:
+                f.write(str(base_image))
 
+        return result_path
