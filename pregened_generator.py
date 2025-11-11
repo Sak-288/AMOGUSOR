@@ -7,7 +7,7 @@ import cv2
 import random as rd
 from concurrent.futures import ThreadPoolExecutor
 import check_originality
-from check_originality import check
+from check_originality import check_fast
 import json
 import threading
 
@@ -95,12 +95,12 @@ def blur_image(base_image, resolution):
 
     # This is my last attempt (yet, maybe more in the future at optimization, and the biggest one so far) : what if we didn't do duplicate frames multiples times ?
     # Multiple frames in a row can be (and usually are) duplicates
-    """result_path = "last_relevant.npy"
+    result_path = "last_relevant.npy"
     second_rp = "last_relevant_key.npy"
     if os.path.exists(result_path) and os.path.exists(second_rp):
         with open(second_rp, 'r', encoding="utf-8") as f:
             last_image = f.read().strip()
-        if check(last_image, base_image) < threshold: # Remember : ssim_score is between 0 and 1 + the last image is the first arg
+        if check_fast(last_image, base_image) < threshold: # Remember : ssim_score is between 0 and 1 + the last image is the first arg
             np.save(result_path, result)
             with open(second_rp, 'w', encoding="utf-8") as f:
                 f.write(str(base_image))
@@ -110,6 +110,6 @@ def blur_image(base_image, resolution):
     else:
         np.save(result_path, result)
         with open(second_rp, 'w', encoding="utf-8") as f:
-                f.write(str(base_image))"""
+                f.write(str(base_image))
 
     return result

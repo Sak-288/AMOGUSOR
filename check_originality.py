@@ -1,28 +1,36 @@
 import numpy as np
-import os
-from skimage.metrics import structural_similarity as ssim
 from PIL import Image
+import os
 
-dir_path = "extracted_frames/"
-
-if not os.path.exists(dir_path):
-    os.makedirs(dir_path)
-
-images = [img for img in os.listdir(dir_path)]
-images.sort()
-
-def check(last_one, current_one):
-    array_one = np.array(Image.open(last_one))
-    array_two = np.array(Image.open(current_one))
+def check_fast(last_one, current_one, scale_factor=0.25):
+    if os.path.exists(last_one):
+        img1 = Image.open(last_one).convert('L')  # Convert to grayscale as faster ig ?
+    else:
+        img1 = Image.open("extracted_frames/frame_000000.jpg").convert('L')  # Convert to grayscale as faster ig ?
+    img2 = Image.open(current_one).convert('L')
     
-    height, width = array_one.shape[:2]
-        
-    max_win_size = min(height, width)
-
-    if max_win_size % 2 == 0:
-        max_win_size = min(7, max_win_size + 1)
+    # Downscale images
+    if scale_factor < 1.0:
+        new_size = (int(img1.width * scale_factor), int(img1.height * scale_factor))
+        img1 = img1.resize(new_size, Image.Resampling.LANCZOS)
+        img2 = img2.resize(new_size, Image.Resampling.LANCZOS)
     
-    if len(array_one.shape) == 3:
-        ssim_score = ssim(array_one, array_two, win_size=max_win_size, channel_axis=2)
+    array_one = np.array(img1, dtype=np.float32)
+    array_two = np.array(img2, dtype=np.float32)
     
-    return float(ssim_score)
+    # Constants for SSIM calculation (thx deepseek)
+    C1 = (0.01 * 255) ** 2
+    C2 = (0.03 * 255) ** 2
+    
+    mu1 = np.mean(array_one)
+    mu2 = np.mean(array_two)
+    
+    sigma1 = np.std(array_one)
+    sigma2 = np.std(array_two)
+    sigma12 = np.cov(array_one.flatten(), array_two.flatten())[0, 1]
+    
+    numerator = (2 * mu1 * mu2 + C1) * (2 * sigma12 + C2)
+    denominator = (mu1 ** 2 + mu2 ** 2 + C1) * (sigma1 ** 2 + sigma2 ** 2 + C2)
+    
+    result = float(numerator / denominator)
+    return max(0.0, min(1.0, result))  # Clamp to [0, 1] because float point error

@@ -48,10 +48,9 @@ def extract_frames_fast(video_path, output_folder):
     
     cap.release()
     
-    return int(fps), total_frames, audio_thread
+    return int(fps), total_frames, audio_thread                   
 
 def process_single_frame(args):
-    """Optimized frame processing"""
     frame_name, image_folder, resolution, width, height = args
     image_path = os.path.join(image_folder, frame_name)
 
@@ -62,11 +61,14 @@ def process_single_frame(args):
     # Process the frame
     result = blur_image(image_path, resolution)
     
-    """if isinstance(result, str):
-        processed_frame = np.load(result)
+    if isinstance(result, str):
+        try:
+            processed_frame = np.load(result)
+        except:
+            processed_frame = np.asarray(Image.open('extracted_frames/frame_000000.jpg'))
         processed_frame = cv2.cvtColor(processed_frame, cv2.COLOR_RGBA2BGR)
-    else:"""
-    processed_frame = cv2.cvtColor(result, cv2.COLOR_RGBA2BGR)
+    else:
+        processed_frame = cv2.cvtColor(result, cv2.COLOR_RGBA2BGR)
 
     # Only resize if necessary
     if processed_frame.shape[1] != width or processed_frame.shape[0] != height:
@@ -85,9 +87,9 @@ def combine_audio(video_name, audio_name, output_file, fps=30):
     my_clip.close()
     audio_background.close()
 
-def create_video_from_images_optimized(output_video_path, image_folder="extracted_frames", fps=30):
+def create_video_from_images_optimized(output_video_path, input_video_path, image_folder="extracted_frames", fps=30):
     # Extract frames and get metadata
-    fps, total_frames, audio_thread = extract_frames_fast("test.mp4", image_folder)
+    fps, total_frames, audio_thread = extract_frames_fast(input_video_path, image_folder)
     
     # Get dimensions from first frame
     first_frame_path = os.path.join(image_folder, "frame_000000.jpg")
@@ -166,4 +168,4 @@ def create_video_from_images_optimized(output_video_path, image_folder="extracte
     print("Process completed successfully!")
 
 # TESTING
-create_video_from_images_optimized("final_video.mp4", "extracted_frames")
+# create_video_from_images_optimized("final_video.mp4", "my_video.mp4", "extracted_frames")
