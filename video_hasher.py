@@ -88,6 +88,8 @@ def combine_audio(video_name, audio_name, output_file, fps=30):
     audio_background.close()
 
 def create_video_from_images_optimized(output_video_path, input_video_path, image_folder="extracted_frames", fps=30):
+    # Temporary since just fixed audio and don't want to wait through 20 minutes of this again
+    """
     # Extract frames and get metadata
     fps, total_frames, audio_thread = extract_frames_fast(input_video_path, image_folder)
     
@@ -159,11 +161,11 @@ def create_video_from_images_optimized(output_video_path, input_video_path, imag
     print("Video writing completed!")
     
     # Wait for audio extraction to finish
-    audio_thread.join()
+    audio_thread.join()"""
     
     # Mix audio with video
     print("Combining audio with video...")
-    combine_audio(output_video_path, "video.mp3", "final_version.mp4", fps=fps)
+    combine_audio("final_version.mp4", "video.mp3", "final_version_with_audio.mp4", fps=fps)
     
     print("Process completed successfully!")
 
