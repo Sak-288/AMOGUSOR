@@ -90,7 +90,7 @@ def generate(request):
     global GLOBAL_FILETYPE
     global GLOBAL_RESOLUTION
     if GLOBAL_FILETYPE == "photo":
-        hash_image("input.jpg", int(GLOBAL_RESOLUTION))
+        hash_image("/home/amine/Documents/Projects --> MOONSHOT/AMOGUSOR/AMOGUSOR/webapp/input.jpg", int(GLOBAL_RESOLUTION))
     elif GLOBAL_FILETYPE == "video":
         create_video_from_images_optimized("output.mp4", "input.mp4", int(GLOBAL_RESOLUTION), "extracted_frames")
     else:
