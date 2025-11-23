@@ -189,24 +189,48 @@
             </script>
             <p>Choose the size of the amoguses (smaller size == better quality or "resolution" but takes longer to generate) :</p>
             <div id="resolution_buttons">
-                <button id="8">
-
+                <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="8">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                8
                 </button>
-                <button id="12">
-
+                </form>
+                <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="12">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                12
                 </button>
-                <button id="16">
-
+                </form>
+                <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="16">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                16
                 </button>
-                <button id = "32">
-
+                </form>
+                <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="32">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                32
                 </button>
-                <button id="48">
-
+                </form>
+                <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="48">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                48
                 </button>
-                <button id="64">
-                    
+                </form>
+                <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="64">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                64
                 </button>
+                </form>
             </div>
         </div>
 
