@@ -2,6 +2,7 @@ import django
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from types import SimpleNamespace
+from 
 
 GLOBAL_FILETYPE = "file"
 GLOBAL_RESOLUTION = "32"
@@ -83,3 +84,6 @@ def contact(request):
         return redirect('/home')
 
     return render(request, 'webapp/contact.html')
+
+def generate(request):
+    return render('/home')
