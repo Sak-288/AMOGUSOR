@@ -1,5 +1,5 @@
 ![Hackatime Stats](https://hackatime-badge.hackclub.com/U0996SS3H41/AMOGUSOR)
-A site inspired by my and every other brave crewmate soldier on r/place ! o7o7o7o7o7
+A site inspired by my and every other brave crewmate soldier's serive during r/place ! Our work will forever be remembered !!!! o7o7o7o7o7
 <div align="center">
   <img src="https://i.ytimg.com/vi/DtrCYvVanR4/maxresdefault.jpg"
        style="width: 100%;">
