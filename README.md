@@ -1,7 +1,7 @@
 ![Hackatime Stats](https://hackatime-badge.hackclub.com/U0996SS3H41/AMOGUSOR)
 A site inspired by my and every other brave crewmate soldier on r/place ! o7o7o7o7o7
 <div align="center">
-  <img src="hhttps://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.youtube.com%2Fshorts%2FDtrCYvVanR4&psig=AOvVaw058yeAABhqo0nUEbi5z96P&ust=1764002185899000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCPCc6bDaiJEDFQAAAAAdAAAAABAE"
+  <img src="https://i.ytimg.com/vi/DtrCYvVanR4/maxresdefault.jpg"
        style="width: 100%;">
 </div>
 <div align="center">
