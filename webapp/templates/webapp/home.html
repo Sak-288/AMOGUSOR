@@ -33,12 +33,13 @@
             margin: 0px auto;
             padding: 1.5vw;
             box-sizing: border-box;
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-start;
-            flex-wrap: wrap;
             color:white;
             box-shadow: 0 0 15px rgba(255, 255, 255, 1.0);
+            font-size:15px;
+            font-weight:bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         #main-title-div {
@@ -139,7 +140,74 @@
         </div>
 
         <div id="info-box">
-            <p>HELLO</p>
+            <!--Thx StackOverflow for this-->
+            <p>Upload an image to sussify : </p>
+            <form action="/action_page.php" id="uploadForm" method="post" enctype="multipart/form-data">
+                
+                <!--Actual Button in itself-->
+                <label for="myFile" 
+                    style="
+                        display: inline-block;
+                        padding: 6px 12px;
+                        cursor: pointer;
+                        background-color: #008cff;
+                        color: white;
+                        border: 1px solid #008cff;
+                        border-radius: 2px;
+                    ">
+                    Choose File
+                </label>
+                
+                <!--logic-->
+                <input type="file" 
+                    id="myFile" 
+                    name="filename" 
+                    accept="image/*"
+                    style="display: none;" /> 
+                
+                <span id="file-chosen" 
+                    style="
+                        margin-left: 10px;
+                        color: #575757;
+                    ">
+                    No file chosen
+                </span>
+                
+            </form>
+            <!--This gets the filename for convenience ig-->
+            <script>
+                const actualFileInput = document.getElementById('myFile');
+                const fileChosenText = document.getElementById('file-chosen');
+
+                actualFileInput.addEventListener('change', function() {
+                    if (actualFileInput.files.length > 0) {
+                        fileChosenText.textContent = actualFileInput.files[0].name;
+                    } else {
+                        fileChosenText.textContent = 'No file chosen';
+                    }
+                });
+            </script>
+            <p>Choose the size of the amoguses (smaller size == better quality or "resolution" but takes longer to generate) :</p>
+            <div id="resolution_buttons">
+                <button id="8">
+
+                </button>
+                <button id="12">
+
+                </button>
+                <button id="16">
+
+                </button>
+                <button id = "32">
+
+                </button>
+                <button id="48">
+
+                </button>
+                <button id="64">
+                    
+                </button>
+            </div>
         </div>
 
         <div id="contact">

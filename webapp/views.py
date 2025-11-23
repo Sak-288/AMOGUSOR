@@ -1,19 +1,25 @@
 import django
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 
 def home(request):
     return render(request, "webapp/home.html")
  
 
+def home_video(request):
+    return render(request, "webapp/home.html")
+
+def home_photo(request):
+    return render(request, "webapp/home.html")
+
 def choose_setting(request):
     if request.method == "POST":
         genderSetting = request.POST.get("gd_setting")
-        if genderSetting == "men":
-            return redirect('/home_men')
-        elif genderSetting == "women":
-            return redirect('/home_women')
+        if genderSetting == "photo":
+            return redirect('/home_photo')
+        elif genderSetting == "video":
+            return redirect('/home_video')
         else:
             return redirect('/home')
 
