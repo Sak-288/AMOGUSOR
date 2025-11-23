@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+        <link rel="icon" type="image/x-icon" href="{% static 'webapp/sus.ico' %}">
+        <title>Amogusor</title>
+    </head>
+    <body>
+        <style>
+        body {
+            background-image: rgba(50, 50, 50, 1);
+            background-size: cover;
+            background-repeat: repeat-y;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            font-family: "Orbitron", sans-serif;
+            overflow-x: hidden;
+        }
+
+        #main-title-div {
+            background-color: white;
+            border-radius: 2px;
+            max-width:90%;
+            margin: 0px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #main-title-h {
+            text-decoration: underline;
+            color: black;
+            font-size: 2vw;
+            font-weight: bold;
+            margin: 1vh 0;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        #options-div {
+            color: white;
+            background-color: black;
+            border-radius: 5px;
+            width: 40%;
+            margin: 0px auto;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 10%;
+            font-weight: bold;
+            font-size: 12px;
+            padding: 1vh;
+        }
+        #contact {
+            background-color: rgb(85, 85, 85);
+            color: white;
+            font-family: "Orbitron", sans-serif;
+            font-weight: bold;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 2vh 0;
+            position:absolute;
+            bottom:0%;
+        }
+
+        .icon-link {
+            display: inline-block;
+            text-decoration: none;
+            transition: filter 0.2s ease, transform 0.1s ease;
+        }
+
+        .icon-link:focus {
+            outline: 2px solid cyan;
+            border-radius: 4px;
+        }
+
+        .icon-link img {
+            display: block;
+        }
+
+        .icon-link:hover {
+            filter: brightness(1.3);
+            transform: translateY(-1px);
+        }
+
+        .icon-link:active {
+            transform: translateY(0);
+        }
+        </style>
+        <!-- Main Title -->
+        <div id="main-title-div">
+            <h1 id="main-title-h">SMASH or PASS (THE BILL) - Edition Assemblée Nationale</h1>
+        </div>
+
+        <div id="options-div">
+            <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="women">
+                <button id="gender_button" type="submit" style="min-height:3vh;min-width:5vw;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;font-size:1vh;">
+                    <i style="color:black;font-weight:bold;font-size:2.4vh;" class="fa fa-venus"></i>
+                </button>
+            </form>
+
+            <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="men">
+                <button id="gender_button" type="submit" style="min-height:3vh;min-width:5vw;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;font-size:1vh;">
+                    <i style="color:black;font-weight:bold;font-size:2.4vh;" class="fa fa-mars"></i>
+                </button>
+            </form>
+
+            <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="mixt">
+                <button id="gender_button" type="submit" style="min-height:3vh;min-width:5vw;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;font-size:1vh;">
+                    <i style="color:black;font-weight:bold;font-size:2.4vh;" class="fa fa-venus-mars"></i>
+                </button>
+            </form>
+        </div>
+
+        <div id="contact">
+            <a class="icon-link" target="_blank" href="https://github.com/Sak-288/SMASH-or-PASS--the-bill-" aria-label="GitHub">
+                <img src="{% static 'webapp/github-logo.png' %}" alt="Github Repo" width="40" height="40">
+            </a>
+            <a class="icon-link" href="/contact" aria-label="Contact">
+                <img src="{% static 'webapp/email-logo.png' %}" alt="Contactez-nous" width="45" height="45">
+            </a>
+        </div>
+        <script>
+            // Save scroll position before leaving or reloading the page
+            window.addEventListener("beforeunload", () => {
+                sessionStorage.setItem("scrollPos", window.scrollY);
+            });
+
+            // Restore scroll position on load
+            window.addEventListener("load", () => {
+                const scrollPos = sessionStorage.getItem("scrollPos");
+                if (scrollPos !== null) {
+                    window.scrollTo(0, parseInt(scrollPos));
+                }
+            });
+        </script>
+    </body>
+</html>

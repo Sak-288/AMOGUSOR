@@ -170,4 +170,4 @@ def create_video_from_images_optimized(output_video_path, input_video_path, imag
     print("Process completed successfully!")
 
 # TESTING
-# create_video_from_images_optimized("final_video.mp4", "my_video.mp4", "extracted_frames")
+create_video_from_images_optimized("final_video.mp4", "my_video.mp4", "extracted_frames")
