@@ -2,7 +2,8 @@ import django
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from types import SimpleNamespace
-from 
+from backend_original.image_hasher import hash_image
+from backend_original.video_hasher import create_video_from_images_optimized
 
 GLOBAL_FILETYPE = "file"
 GLOBAL_RESOLUTION = "32"
@@ -86,4 +87,12 @@ def contact(request):
     return render(request, 'webapp/contact.html')
 
 def generate(request):
-    return render('/home')
+    global GLOBAL_FILETYPE
+    global GLOBAL_RESOLUTION
+    if GLOBAL_FILETYPE == "photo":
+        hash_image()
+    elif GLOBAL_FILETYPE == "video":
+        create_video_from_images_optimized()
+    else:
+        return redirect('/home')
+    return redirect('/home')
