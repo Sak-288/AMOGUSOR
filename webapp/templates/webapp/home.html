@@ -34,12 +34,26 @@
             padding: 1.5vw;
             box-sizing: border-box;
             color:white;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 1.0);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.99);
             font-size:15px;
             font-weight:bold;
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        .choose_file_button {
+            transition-duration:0.1s;
+        }
+
+        .choose_file_button:hover {
+            filter: brightness(1.3);
+            transform: translateY(-1px);
+        }
+
+        .choose_file_button:active {
+            filter: brightness(0.7);
+            transform: translateY(1px);
         }
 
         #main-title-div {
@@ -78,13 +92,13 @@
             padding: 0.25vh;
         }
         #contact {
-            background-color: rgba(50, 50, 50, 1.0);
+            background-color: rgba(50, 50, 50, 0.99);
             color: white;
             font-family: "Orbitron", sans-serif;
             font-weight: bold;
             width: 100%;
-            display: flex;
-            align-items: center;
+            display: flex;           
+            align-items: center;         
             justify-content:space-around;
             gap:0%;
             padding: 1vh 0;
@@ -139,13 +153,14 @@
             </form>
         </div>
 
+        {% csrf_token %}
         <div id="info-box">
             <!--Thx StackOverflow for this-->
-            <p>Upload an image to sussify : </p>
+            <p>Upload a {{Specifities.filetype}} to sussify : </p>
             <form action="/action_page.php" id="uploadForm" method="post" enctype="multipart/form-data">
                 
                 <!--Actual Button in itself-->
-                <label for="myFile" 
+                <label class="choose_file_button" for="myFile" 
                     style="
                         display: inline-block;
                         padding: 6px 12px;
@@ -188,7 +203,8 @@
                 });
             </script>
             <p>Choose the size of the amoguses (smaller size == better quality or "resolution" but takes longer to generate) :</p>
-            <div id="resolution_buttons">
+            <p style="font-size:14px;">Current Size : {{Specifities.resolution}}px</p>
+            <div id="resolution_buttons" style="display:flex;flex-direction:row;align-items: center;justify-content: space-around;gap:10px;">
                 <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
                 {% csrf_token %}
                 <input type="hidden" name="gd_setting" value="8">
