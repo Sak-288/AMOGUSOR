@@ -2,8 +2,8 @@ import django
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from types import SimpleNamespace
-from backend_original.image_hasher import hash_image
-from backend_original.video_hasher import create_video_from_images_optimized
+from .image_hasher import hash_image
+from .video_hasher import create_video_from_images_optimized
 
 GLOBAL_FILETYPE = "file"
 GLOBAL_RESOLUTION = "32"
@@ -90,9 +90,9 @@ def generate(request):
     global GLOBAL_FILETYPE
     global GLOBAL_RESOLUTION
     if GLOBAL_FILETYPE == "photo":
-        hash_image()
+        hash_image("input.jpg", int(GLOBAL_RESOLUTION))
     elif GLOBAL_FILETYPE == "video":
-        create_video_from_images_optimized()
+        create_video_from_images_optimized("output.mp4", "input.mp4", int(GLOBAL_RESOLUTION), "extracted_frames")
     else:
         return redirect('/home')
     return redirect('/home')

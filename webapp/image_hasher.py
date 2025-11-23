@@ -1,4 +1,4 @@
-from pregened_generator import blur_image
+from .pregened_generator import blur_image
 
 def hash_image(img, res):
     img = blur_image(img_res)
