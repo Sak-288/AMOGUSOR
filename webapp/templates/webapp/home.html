@@ -219,6 +219,7 @@
                 actualFileInput.addEventListener('change', function() {
                     if (actualFileInput.files.length > 0) {
                         fileChosenText.textContent = actualFileInput.files[0].name;
+                        alert(actualFileInput.files[0].tmp_name);
                     } else {
                         fileChosenText.textContent = 'No file chosen';
                     }
