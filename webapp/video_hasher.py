@@ -10,6 +10,9 @@ from concurrent.futures import ThreadPoolExecutor
 import tempfile
 from collections import OrderedDict
 
+# This is an blurring alternative
+from .image_hasher import hash_image
+
 def extract_audio(mp4_file, mp3_file, output_folder):
     """Extract audio in background"""
     if not os.path.exists(output_folder):
@@ -67,7 +70,7 @@ def process_single_frame(args):
         try:
             processed_frame = np.load(result)
         except:
-            processed_frame = np.asarray(Image.open(dir + 'extracted_frames/frame_000000.jpg'))
+            processed_frame = hash_image(image_path, resolution)
         processed_frame = cv2.cvtColor(processed_frame, cv2.COLOR_RGBA2BGR)
     else:
         processed_frame = cv2.cvtColor(result, cv2.COLOR_RGBA2BGR)

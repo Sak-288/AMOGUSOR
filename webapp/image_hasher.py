@@ -82,6 +82,6 @@ def hash_image(img, res):
         for y_start, y_end, x_start, x_end, patch_img in executor.map(process_tile, tasks):
             result[y_start:y_end, x_start:x_end] = patch_img
 
-    img = Image.fromarray(result)
-    img.show()
+    #img = Image.fromarray(result)
+    #img.show()
     return result
