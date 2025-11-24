@@ -94,8 +94,9 @@ def blur_image(base_image, resolution):
 
     # This is my last attempt (yet, maybe more in the future at optimization, and the biggest one so far) : what if we didn't do duplicate frames multiples times ?
     # Multiple frames in a row can be (and usually are) duplicates
-    result_path = "last_relevant.npy"
-    second_rp = "last_relevant_key.npy"
+    dir = "/home/amine/Documents/Projects --> MOONSHOT/AMOGUSOR/AMOGUSOR/webapp/"
+    result_path = dir + "last_relevant.npy"
+    second_rp = dir + "last_relevant_key.npy"
     if os.path.exists(result_path) and os.path.exists(second_rp):
         with open(second_rp, 'r', encoding="utf-8") as f:
             last_image = f.read().strip()

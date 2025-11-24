@@ -30,9 +30,10 @@ def extract_frames_fast(video_path, output_folder):
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     fps = cap.get(cv2.CAP_PROP_FPS)
     
+    dir = "/home/amine/Documents/Projects --> MOONSHOT/AMOGUSOR/AMOGUSOR/webapp/"
     # Start audio extraction immediately in background
     audio_thread = threading.Thread(target=extract_audio, 
-                                  args=(video_path, "video.mp3", output_folder))
+                                  args=(video_path, dir + "video.mp3", output_folder))
     audio_thread.start()
     
     # Extract frames with lower quality to save disk I/O time
@@ -40,7 +41,7 @@ def extract_frames_fast(video_path, output_folder):
     while True:
         ret, frame = cap.read()
         if not ret:
-            break
+            break      
         
         cv2.imwrite(os.path.join(output_folder, f"frame_{frame_count:06d}.jpg"), frame, 
                 [cv2.IMWRITE_JPEG_QUALITY, 70])  # Lower quality for faster I/O
@@ -53,6 +54,7 @@ def extract_frames_fast(video_path, output_folder):
 def process_single_frame(args):
     frame_name, image_folder, resolution, width, height = args
     image_path = os.path.join(image_folder, frame_name)
+    dir = "/home/amine/Documents/Projects --> MOONSHOT/AMOGUSOR/AMOGUSOR/webapp/"
 
     # Quick file validation
     if not os.path.exists(image_path):
@@ -65,7 +67,7 @@ def process_single_frame(args):
         try:
             processed_frame = np.load(result)
         except:
-            processed_frame = np.asarray(Image.open('extracted_frames/frame_000000.jpg'))
+            processed_frame = np.asarray(Image.open(dir + 'extracted_frames/frame_000000.jpg'))
         processed_frame = cv2.cvtColor(processed_frame, cv2.COLOR_RGBA2BGR)
     else:
         processed_frame = cv2.cvtColor(result, cv2.COLOR_RGBA2BGR)
@@ -159,6 +161,7 @@ def create_video_from_images_optimized(output_video_path, input_video_path, reso
     # Wait for audio extraction to finish
     audio_thread.join()
     
+    dir = "/home/amine/Documents/Projects --> MOONSHOT/AMOGUSOR/AMOGUSOR/webapp/"
     # Mix audio with video
     print("Combining audio with video...")
     combine_audio(dir + "output.mp4", dir + "video.mp3", dir + "final_version_with_audio.mp4", fps=fps)

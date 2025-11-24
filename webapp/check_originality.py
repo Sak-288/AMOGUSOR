@@ -3,10 +3,11 @@ from PIL import Image
 import os
 
 def check_fast(last_one, current_one, scale_factor=0.25):
+    dir = "/home/amine/Documents/Projects --> MOONSHOT/AMOGUSOR/AMOGUSOR/webapp/"
     if os.path.exists(last_one):
         img1 = Image.open(last_one).convert('L')  # Convert to grayscale as faster ig ?
     else:
-        img1 = Image.open("extracted_frames/frame_000000.jpg").convert('L')  # Convert to grayscale as faster ig ?
+        img1 = Image.open(dir + "extracted_frames/frame_000000.jpg").convert('L')  # Convert to grayscale as faster ig ?
     img2 = Image.open(current_one).convert('L')
     
     # Downscale images
@@ -18,7 +19,7 @@ def check_fast(last_one, current_one, scale_factor=0.25):
     array_one = np.array(img1, dtype=np.float32)
     array_two = np.array(img2, dtype=np.float32)
     
-    # Constants for SSIM calculation (thx deepseek)
+    # Constants for SSIM calculation
     C1 = (0.01 * 255) ** 2
     C2 = (0.03 * 255) ** 2
     
