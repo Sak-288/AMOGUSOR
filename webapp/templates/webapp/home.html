@@ -43,7 +43,17 @@
         }
 
         .choose_file_button {
+            font-family:'Orbitron', sans-serif;
+            font-size:16px;
+            font-weight:bold;
             transition-duration:0.1s;
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+            background-color: #008cff;
+            color: white;
+            border: 1px solid #008cff;
+            border-radius: 2px;
         }
 
         .choose_file_button:hover {
@@ -135,7 +145,7 @@
             border:none;
             box-shadow:0 0 15 rgba(255, 255, 255, 0.99);
             height:6vh;
-            width:8vw;
+            min-width:8vw;
             color:white;
             font-size:20px;
             font-family:'Orbitron', sans-serif;
@@ -151,6 +161,21 @@
             filter:brightness(0.7);
             transform:translateY(1px);
         }
+        #gender_button {
+            cursor:pointer;
+            font-size:20px;
+            width:10vw;
+            height:4.5vh;
+            border:none;
+            border-radius:2px;
+            background-color:white;
+            color:black;
+            font-weight:bold;
+            font-family:'Orbitron', sans-serif;
+        }
+        input[type="file"] {
+            display: none;
+        }
         </style>
         <!-- Main Title -->
         <div id="main-title-div">
@@ -161,7 +186,7 @@
             <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
                 {% csrf_token %}
                 <input type="hidden" name="gd_setting" value="photo">
-                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                <button id="gender_button" type="submit">
                     <i>Photo</i>
                 </button>
             </form>
@@ -169,20 +194,39 @@
             <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
                 {% csrf_token %}    
                 <input type="hidden" name="gd_setting" value="video">
-                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                <button id="gender_button" type="submit">
                     <i>Video</i>
                 </button>
             </form>
-        </div>
+        </div>   
 
         {% csrf_token %}
         <div id="info-box">
             <!--File things-->
             <p>Upload a {{Specifities.filetype}} to sussify : </p>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %} {{ form.as_p }}
-                <button type="submit">Upload</button>
-            </form>
+            <label for="file_button" class="choose_file_button">Choose a file</label>
+            <input id="file_button" type="file" accept="image/*" capture="user" multiple="false">
+            <p id="updt_file_name"></p>
+            <div id="dropbox">
+                Hello
+                Hello
+                Hello
+                Hello
+            </div>
+
+            <script>
+                let dropbox;
+                dropbox = document.getElementById("dropbox");
+                dropbox.addEventListener("dragenter", dragenter);
+                dropbox.addEventListener("dragover", dragover);
+                dropbox.addEventListener("drop", drop);
+
+                document.getElementById('file_button').addEventListener('change', function() {
+                    var file = this.files[0];
+                    var filename = file ? file.name : "No file was selected";
+                    document.getElementById('updt_file_name').textContent = 'Selected file : ' + filename;
+                });
+            </script>
 
             <!--Image Controls-->
             <p>Choose the size of the amoguses (smaller size == better quality or "resolution" but takes longer to generate) :</p>
@@ -237,9 +281,7 @@
             <form id="gd_setting" method="POST" action="{% url 'generate' %}">
                 {% csrf_token %}
                 <input type="hidden" name="gd_setting">
-                <button type="submit" id="generate_button">
-                    Generate
-                </button>
+                <button type="submit" id="generate_button">Generate</button>
             </form>
         </div>
 

@@ -4,8 +4,6 @@ from django.shortcuts import render, redirect
 from types import SimpleNamespace
 from .image_hasher import hash_image
 from .video_hasher import create_video_from_images_optimized
-# For the file uploads
-from .forms import UploadFileForm
 
 GLOBAL_FILETYPE = "file"
 GLOBAL_RESOLUTION = "32"
@@ -99,15 +97,3 @@ def generate(request):
     else:
         return redirect('/home')
     return redirect('/home')
-
-
-
-def upload_file_view(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-    else:
-        form = UploadFileForm()
-
-    return render(request, 'upload.html', {'form': form})
