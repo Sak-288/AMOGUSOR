@@ -207,19 +207,74 @@
             <label for="file_button" class="choose_file_button">Choose a file</label>
             <input id="file_button" type="file" accept="image/*" capture="user" multiple="false">
             <p id="updt_file_name"></p>
-            <div id="dropbox">
-                Hello
-                Hello
-                Hello
-                Hello
+
+            <!--DROP AREA ::: VERY EXPRERIMENTAL-->
+            <div id="drop-area">
+                <p>Drag and drop files here or click to upload</p>
+                <input type="file" id="drop-input" multiple="false">
             </div>
 
             <script>
-                let dropbox;
-                dropbox = document.getElementById("dropbox");
-                dropbox.addEventListener("dragenter", dragenter);
-                dropbox.addEventListener("dragover", dragover);
-                dropbox.addEventListener("drop", drop);
+                const dropArea = document.getElementById('drop-area');
+                const fileInput = document.getElementById('file-input');
+
+                // Prevent default drag behaviors
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false); // Prevent on window too
+                });
+
+                function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                }
+
+                // Highlight drop area when item is dragged over it
+                ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+                });
+
+                function highlight() {
+                dropArea.classList.add('highlight');
+                }
+
+                function unhighlight() {
+                dropArea.classList.remove('highlight');
+                }
+
+                // Handle dropped files
+                dropArea.addEventListener('drop', handleDrop, false);
+
+                function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+                }
+
+                // Handle files selected via input
+                fileInput.addEventListener('change', (e) => {
+                const files = e.target.files;
+                handleFiles(files);
+                });
+
+                dropArea.addEventListener('click', () => {
+                fileInput.click(); // Trigger click on hidden input
+                });
+
+                function handleFiles(files) {
+                // Process the files here, e.g., display previews, upload to server
+                for (const file of files) {
+                    console.log(`File name: ${file.name}, size: ${file.size}, type: ${file.type}`);
+                    // Example: Display file name
+                    const p = document.createElement('p');
+                    p.textContent = file.name;
+                    dropArea.appendChild(p);
+                }
+                }
 
                 document.getElementById('file_button').addEventListener('change', function() {
                     var file = this.files[0];
