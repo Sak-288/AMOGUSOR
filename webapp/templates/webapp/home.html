@@ -177,54 +177,14 @@
 
         {% csrf_token %}
         <div id="info-box">
-            <!--Thx StackOverflow for this-->
+            <!--File things-->
             <p>Upload a {{Specifities.filetype}} to sussify : </p>
-            <form action="/action_page.php" id="uploadForm" method="post" enctype="multipart/form-data">
-                
-                <!--Actual Button in itself-->
-                <label class="choose_file_button" for="myFile" 
-                    style="
-                        display: inline-block;
-                        padding: 6px 12px;
-                        cursor: pointer;
-                        background-color: #008cff;
-                        color: white;
-                        border: 1px solid #008cff;
-                        border-radius: 2px;
-                    ">
-                    Choose File
-                </label>
-                
-                <!--logic-->
-                <input type="file" 
-                    id="myFile" 
-                    name="filename" 
-                    accept="image/*"
-                    style="display: none;" /> 
-                
-                <span id="file-chosen" 
-                    style="
-                        margin-left: 10px;
-                        color: #757575;
-                    ">
-                    No file chosen
-                </span>
-                
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %} {{ form.as_p }}
+                <button type="submit">Upload</button>
             </form>
-            <!--This gets the filename for convenience ig-->
-            <script>
-                const actualFileInput = document.getElementById('myFile');
-                const fileChosenText = document.getElementById('file-chosen');
 
-                actualFileInput.addEventListener('change', function() {
-                    if (actualFileInput.files.length > 0) {
-                        fileChosenText.textContent = actualFileInput.files[0].name;
-                        alert(actualFileInput.files[0].tmp_name);
-                    } else {
-                        fileChosenText.textContent = 'No file chosen';
-                    }
-                });
-            </script>
+            <!--Image Controls-->
             <p>Choose the size of the amoguses (smaller size == better quality or "resolution" but takes longer to generate) :</p>
             <p style="font-size:14px;">Current Size : {{Specifities.resolution}}px</p>
             <div id="resolution_buttons" style="display:flex;flex-direction:row;align-items: center;justify-content: space-around;gap:10px;">

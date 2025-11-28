@@ -1,0 +1,11 @@
+from django import forms
+from .models import UploadedFile
+
+class UploadFileForm(forms.ModelForm):
+    class Meta:
+        model = UploadedFile
+        fields = ('file', 'description')
+        widgets = {
+            # Use specific HTML attributes if needed
+            'file': forms.FileInput(attrs={'class': 'form-control-file'})
+        }
