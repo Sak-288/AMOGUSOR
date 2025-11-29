@@ -35,7 +35,7 @@
             box-sizing: border-box;
             color:white;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.99);
-            font-size:15px;
+            font-size:18px;
             font-weight:bold;
             display: flex;
             flex-direction: column;
@@ -176,6 +176,12 @@
         input[type="file"] {
             display: none;
         }
+        #drop-area {
+            background-color:rgba(0, 140, 255, 1.0);
+            padding:20px;
+            margin-top:-10px;
+            border-radius:1.5px;
+        }
         </style>
         <!-- Main Title -->
         <div id="main-title-div">
@@ -205,77 +211,10 @@
             <!--File things-->
             <p>Upload a {{Specifities.filetype}} to sussify : </p>
             <label for="file_button" class="choose_file_button">Choose a file</label>
-            <input id="file_button" type="file" accept="image/*" capture="user" multiple="false">
+            <input id="file_button" type="file" accept="image/*">
             <p id="updt_file_name"></p>
 
-            <!--DROP AREA ::: VERY EXPRERIMENTAL-->
-            <div id="drop-area">
-                <p>Drag and drop files here or click to upload</p>
-                <input type="file" id="drop-input" multiple="false">
-            </div>
-
             <script>
-                const dropArea = document.getElementById('drop-area');
-                const fileInput = document.getElementById('file-input');
-
-                // Prevent default drag behaviors
-                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                dropArea.addEventListener(eventName, preventDefaults, false);
-                document.body.addEventListener(eventName, preventDefaults, false); // Prevent on window too
-                });
-
-                function preventDefaults(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                }
-
-                // Highlight drop area when item is dragged over it
-                ['dragenter', 'dragover'].forEach(eventName => {
-                dropArea.addEventListener(eventName, highlight, false);
-                });
-
-                ['dragleave', 'drop'].forEach(eventName => {
-                dropArea.addEventListener(eventName, unhighlight, false);
-                });
-
-                function highlight() {
-                dropArea.classList.add('highlight');
-                }
-
-                function unhighlight() {
-                dropArea.classList.remove('highlight');
-                }
-
-                // Handle dropped files
-                dropArea.addEventListener('drop', handleDrop, false);
-
-                function handleDrop(e) {
-                const dt = e.dataTransfer;
-                const files = dt.files;
-                handleFiles(files);
-                }
-
-                // Handle files selected via input
-                fileInput.addEventListener('change', (e) => {
-                const files = e.target.files;
-                handleFiles(files);
-                });
-
-                dropArea.addEventListener('click', () => {
-                fileInput.click(); // Trigger click on hidden input
-                });
-
-                function handleFiles(files) {
-                // Process the files here, e.g., display previews, upload to server
-                for (const file of files) {
-                    console.log(`File name: ${file.name}, size: ${file.size}, type: ${file.type}`);
-                    // Example: Display file name
-                    const p = document.createElement('p');
-                    p.textContent = file.name;
-                    dropArea.appendChild(p);
-                }
-                }
-
                 document.getElementById('file_button').addEventListener('change', function() {
                     var file = this.files[0];
                     var filename = file ? file.name : "No file was selected";
