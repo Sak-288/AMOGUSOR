@@ -233,7 +233,7 @@
         <div id="info-box">
             <!--File things-->
             <p>Upload a {{Specifities.filetype}} to sussify : </p>
-            <form method="POST" enctype="multipart/form-data" action="{% url 'boilerplate' %}">
+            <form method="POST" enctype="multipart/form-data" action="{% url 'choose_file' %}">
                 {% csrf_token %}
                 <input id="file_button" name="file" type="file" accept="image/*" style="display: none;">
                 <label for="file_button" class="choose_file_button">Choose a file !</label> 

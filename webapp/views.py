@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from types import SimpleNamespace
 from .image_hasher import hash_image
 from .video_hasher import create_video_from_images_optimized
+from django.core.files.storage import FileSystemStorage
 
 GLOBAL_FILETYPE = "file"
 GLOBAL_RESOLUTION = "32"
@@ -101,12 +102,16 @@ def generate(request):
         return redirect('/home')
     return redirect('/home')
 
-def boilerplate(request):
+def choose_file(request):
     if request.method == "POST":
         uploaded_file = request.FILES.get("file")
         if uploaded_file:
-            fileData = uploaded_file.read()
-            print(uploaded_file.name + " : " + str(fileData))
+            destination_path = ".user_upload_data.txt"
+            
+            # Django Magic File Storing
+            fs = FileSystemStorage()
+            filename = fs.save('my_uploads/' + uploaded_file.name, uploaded_file) 
+            
             returnDict = {'Specifities':SimpleNamespace(filetype="video", resolution=GLOBAL_RESOLUTION, filename=uploaded_file.name)}
         else:
             noFileMessage = "Error in file choosing"

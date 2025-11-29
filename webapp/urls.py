@@ -11,5 +11,5 @@ urlpatterns = [
     path('home_video/', views.home_video, name='home_video'),
     path('home_photo/', views.home_photo, name='home_photo'),
     path('generate/', views.generate, name='generate'),
-    path('boilerplate/', views.boilerplate, name='boilerplate'),
+    path('choose_file/', views.choose_file, name='choose_file'),
 ]
