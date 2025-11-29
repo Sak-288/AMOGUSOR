@@ -12,7 +12,7 @@
         body {
             background-image:url("{% static 'webapp/wallpaper.gif' %}");
             background-size:1920px 1018px;
-            background-repeat: no-repeat;
+            background-repeat: repeat;
             background-position: center;
             height: 100vh;
             margin: 0;
@@ -40,6 +40,30 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        .upload_file_button {
+            font-family:'Orbitron', sans-serif;
+            font-size:16px;
+            font-weight:bold;
+            transition-duration:0.1s;
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+            background-color: #00d435;
+            color: white;
+            border: 1px solid #00d435;
+            border-radius: 2px;
+        }
+
+        .upload_file_button:hover {
+            filter: brightness(1.3);
+            transform: translateY(-1px);
+        }
+
+        .upload_file_button:active {
+            filter: brightness(0.7);
+            transform: translateY(1px);
         }
 
         .choose_file_button {
@@ -148,10 +172,11 @@
             min-width:8vw;
             color:white;
             font-size:20px;
+            margin-top:-5px;
             font-family:'Orbitron', sans-serif;
             font-weight:bold;
             cursor:pointer;
-            transition-duration:0.1s ease;
+            transition-duration:0.1s;
         }
         #generate_button:hover{
             filter:brightness(1.3);
@@ -176,11 +201,10 @@
         input[type="file"] {
             display: none;
         }
-        #drop-area {
-            background-color:rgba(0, 140, 255, 1.0);
-            padding:20px;
-            margin-top:-10px;
-            border-radius:1.5px;
+        #updt_file_name {
+            font-size:14px;
+            font-style:italic;
+            color:rgb(255, 51, 0);
         }
         </style>
         <!-- Main Title -->
@@ -206,25 +230,21 @@
             </form>
         </div>   
 
-        {% csrf_token %}
         <div id="info-box">
             <!--File things-->
             <p>Upload a {{Specifities.filetype}} to sussify : </p>
-            <label for="file_button" class="choose_file_button">Choose a file</label>
-            <input id="file_button" type="file" accept="image/*">
-            <p id="updt_file_name"></p>
+            <form method="POST" enctype="multipart/form-data" action="{% url 'boilerplate' %}">
+                {% csrf_token %}
+                <input id="file_button" name="file" type="file" accept="image/*" style="display: none;">
+                <label for="file_button" class="choose_file_button">Choose a file !</label> 
+                <button class="upload_file_button" type="submit">Upload</button>
+            </form>
 
-            <script>
-                document.getElementById('file_button').addEventListener('change', function() {
-                    var file = this.files[0];
-                    var filename = file ? file.name : "No file was selected";
-                    document.getElementById('updt_file_name').textContent = 'Selected file : ' + filename;
-                });
-            </script>
+            <p id="updt_file_name">Selected file : {{Specifities.filename}}</p>
 
             <!--Image Controls-->
-            <p>Choose the size of the amoguses (smaller size == better quality or "resolution" but takes longer to generate) :</p>
-            <p style="font-size:14px;">Current Size : {{Specifities.resolution}}px</p>
+            <p style="margin-top:10px;">Choose the size of the amoguses (smaller size == better quality or "resolution" but takes longer to generate) :</p>
+            <p style="font-size:14px;margin-top:10px;">Current Size : {{Specifities.resolution}}px</p>
             <div id="resolution_buttons" style="display:flex;flex-direction:row;align-items: center;justify-content: space-around;gap:10px;">
                 <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
                 {% csrf_token %}

@@ -9,19 +9,22 @@ GLOBAL_FILETYPE = "file"
 GLOBAL_RESOLUTION = "32"
 
 def home(request):
-    returnDict = {'Specifities':SimpleNamespace(filetype="file", resolution=GLOBAL_RESOLUTION)}
+    noFileMessage = "No file has been selected yet"
+    returnDict = {'Specifities':SimpleNamespace(filetype="file", resolution=GLOBAL_RESOLUTION, filename=noFileMessage)}
     global GLOBAL_FILETYPE
     GLOBAL_FILETYPE = "file"
     return render(request, "webapp/home.html", returnDict)
  
 def home_video(request):
-    returnDict = {'Specifities':SimpleNamespace(filetype="video", resolution=GLOBAL_RESOLUTION)}
+    noFileMessage = "No file has been selected yet"
+    returnDict = {'Specifities':SimpleNamespace(filetype="video", resolution=GLOBAL_RESOLUTION, filename=noFileMessage)}
     global GLOBAL_FILETYPE
     GLOBAL_FILETYPE = "video"
     return render(request, "webapp/home.html", returnDict)
 
 def home_photo(request):
-    returnDict = {'Specifities':SimpleNamespace(filetype="photo", resolution=GLOBAL_RESOLUTION)}
+    noFileMessage = "No file has been selected yet"
+    returnDict = {'Specifities':SimpleNamespace(filetype="photo", resolution=GLOBAL_RESOLUTION, filename=noFileMessage)}
     global GLOBAL_FILETYPE
     GLOBAL_FILETYPE = "photo"
     return render(request, "webapp/home.html", returnDict)
@@ -97,3 +100,15 @@ def generate(request):
     else:
         return redirect('/home')
     return redirect('/home')
+
+def boilerplate(request):
+    if request.method == "POST":
+        uploaded_file = request.FILES.get("file")
+        if uploaded_file:
+            fileData = uploaded_file.read()
+            print(uploaded_file.name + " : " + str(fileData))
+            returnDict = {'Specifities':SimpleNamespace(filetype="video", resolution=GLOBAL_RESOLUTION, filename=uploaded_file.name)}
+        else:
+            noFileMessage = "Error in file choosing"
+            returnDict = {'Specifities':SimpleNamespace(filetype="video", resolution=GLOBAL_RESOLUTION, filename=noFileMessage)}
+    return render(request, 'webapp/home.html', returnDict)
