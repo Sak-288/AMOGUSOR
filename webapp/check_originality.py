@@ -3,7 +3,7 @@ from PIL import Image
 import os
 
 def check_fast(last_one, current_one, scale_factor=0.25):
-    dir = "/home/amine/Documents/Projects --> MOONSHOT/AMOGUSOR/AMOGUSOR/webapp/"
+    dir = "usage/"
     if os.path.exists(last_one):
         img1 = Image.open(last_one).convert('L')  # Convert to grayscale as faster ig ?
     else:

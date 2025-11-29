@@ -33,7 +33,7 @@ def extract_frames_fast(video_path, output_folder):
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     fps = cap.get(cv2.CAP_PROP_FPS)
     
-    dir = "/home/amine/Documents/Projects --> MOONSHOT/AMOGUSOR/AMOGUSOR/webapp/"
+    dir = "usage/"
     # Start audio extraction immediately in background
     audio_thread = threading.Thread(target=extract_audio, 
                                   args=(video_path, dir + "video.mp3", output_folder))
@@ -57,7 +57,7 @@ def extract_frames_fast(video_path, output_folder):
 def process_single_frame(args):
     frame_name, image_folder, resolution, width, height = args
     image_path = os.path.join(image_folder, frame_name)
-    dir = "/home/amine/Documents/Projects --> MOONSHOT/AMOGUSOR/AMOGUSOR/webapp/"
+    dir = "usage/"
 
     # Quick file validation
     if not os.path.exists(image_path):
@@ -164,7 +164,7 @@ def create_video_from_images_optimized(output_video_path, input_video_path, reso
     # Wait for audio extraction to finish
     audio_thread.join()
     
-    dir = "/home/amine/Documents/Projects --> MOONSHOT/AMOGUSOR/AMOGUSOR/webapp/"
+    dir = "usage/"
     # Mix audio with video
     print("Combining audio with video...")
     combine_audio(dir + "output.mp4", dir + "video.mp3", dir + "final_version_with_audio.mp4", fps=fps)

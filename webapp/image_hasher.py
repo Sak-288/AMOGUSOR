@@ -71,7 +71,7 @@ def hash_image(img, res):
     
     result = np.zeros((output_height, output_width, 3), dtype=np.uint8)
     
-    # Prepare tasks for parallel processing
+    # Prepare tasks for pfarallel processing
     tasks = []
     for x in range(0, img_width, res):
         for y in range(0, img_height, res):

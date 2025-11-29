@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from .image_hasher import hash_image
 from .video_hasher import create_video_from_images_optimized
 from django.core.files.storage import FileSystemStorage
+import os
 
 GLOBAL_FILETYPE = "file"
 GLOBAL_RESOLUTION = "32"
@@ -93,11 +94,13 @@ def contact(request):
 def generate(request):
     global GLOBAL_FILETYPE
     global GLOBAL_RESOLUTION
-    dir = "/home/amine/Documents/Projects --> MOONSHOT/AMOGUSOR/AMOGUSOR/webapp/"
+    dir = "media/my_uploads/"
     if GLOBAL_FILETYPE == "photo":
-        hash_image(dir + "input.jpg", int(GLOBAL_RESOLUTION))
+        entry_list = [x for x in os.scandir(dir)]
+        hash_image(dir + entry_list[0].name, int(GLOBAL_RESOLUTION))
     elif GLOBAL_FILETYPE == "video":
-        create_video_from_images_optimized(dir + "output.mp4", dir + "input.mp4", int(GLOBAL_RESOLUTION), dir + "extracted_frames")
+        entry_list = [x for x in os.scandir(dir)]
+        create_video_from_images_optimized("usage/output.mp4", dir + entry_list[0].name, int(GLOBAL_RESOLUTION), "usage/extracted_frames")
     else:
         return redirect('/home')
     return redirect('/home')
@@ -106,7 +109,10 @@ def choose_file(request):
     if request.method == "POST":
         uploaded_file = request.FILES.get("file")
         if uploaded_file:
-            destination_path = ".user_upload_data.txt"
+            destination_path = "media/my_uploads/"
+
+            for filepath in os.scandir(destination_path):
+                os.remove(filepath)
             
             # Django Magic File Storing
             fs = FileSystemStorage()
