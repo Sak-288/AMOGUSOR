@@ -20,14 +20,14 @@ def home(request):
  
 def home_video(request):
     noFileMessage = "No file has been selected yet"
-    returnDict = {'Specifities':SimpleNamespace(filetype="video", resolution=GLOBAL_RESOLUTION, filename=noFileMessage)}
+    returnDict = {'Specifities':SimpleNamespace(filetype="video", resolution=GLOBAL_RESOLUTION, filename=noFileMessage, accFileType="video")}
     global GLOBAL_FILETYPE
     GLOBAL_FILETYPE = "video"
     return render(request, "webapp/home.html", returnDict)
 
 def home_photo(request):
     noFileMessage = "No file has been selected yet"
-    returnDict = {'Specifities':SimpleNamespace(filetype="photo", resolution=GLOBAL_RESOLUTION, filename=noFileMessage)}
+    returnDict = {'Specifities':SimpleNamespace(filetype="photo", resolution=GLOBAL_RESOLUTION, filename=noFileMessage, accFileType="image")}
     global GLOBAL_FILETYPE
     GLOBAL_FILETYPE = "photo"
     return render(request, "webapp/home.html", returnDict)
@@ -119,9 +119,9 @@ def choose_file(request):
             # Django Magic File Storing
             fs = FileSystemStorage()
             filename = fs.save('my_uploads/' + uploaded_file.name, uploaded_file) 
-            
-            returnDict = {'Specifities':SimpleNamespace(filetype="video", resolution=GLOBAL_RESOLUTION, filename=uploaded_file.name)}
+
+            returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, filename=uploaded_file.name)}
         else:
             noFileMessage = "Error in file choosing"
-            returnDict = {'Specifities':SimpleNamespace(filetype="video", resolution=GLOBAL_RESOLUTION, filename=noFileMessage)}
+            returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, filename=noFileMessage)}
     return render(request, 'webapp/home.html', returnDict)

@@ -23,7 +23,7 @@
 
         #info-box{
             position:absolute;
-            top:53%;
+            top:50%;
             left:50%;
             transform:translate(-50%, -50%);
             background-color: rgba(50, 50, 50, 0.99);
@@ -35,7 +35,7 @@
             box-sizing: border-box;
             color:white;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.99);
-            font-size:18px;
+            font-size:1vw;
             font-weight:bold;
             display: flex;
             flex-direction: column;
@@ -44,7 +44,7 @@
 
         .upload_file_button {
             font-family:'Orbitron', sans-serif;
-            font-size:16px;
+            font-size:1vw;
             font-weight:bold;
             transition-duration:0.1s;
             display: inline-block;
@@ -68,7 +68,7 @@
 
         .choose_file_button {
             font-family:'Orbitron', sans-serif;
-            font-size:16px;
+            font-size:1vw;
             font-weight:bold;
             transition-duration:0.1s;
             display: inline-block;
@@ -103,7 +103,7 @@
         #main-title-h {
             text-decoration: underline;
             color: black;
-            font-size: 2vw;
+            font-size:2vw;
             font-weight: bold;
             margin: 1vh 0;
             text-align: center;
@@ -112,17 +112,15 @@
 
         #options-div {
             color: white;
-            background-color: black;
             border-radius: 5px;
             width: 50%;
             height:6%;
             margin: 0px auto;
             display: flex;
-            justify-content: space-around;
+            justify-content:center;
             align-items:center;
-            gap: 0%;
             font-weight: bold;
-            font-size: 12px;
+            font-size:0.75vw;
             padding: 0.25vh;
         }
         #contact {
@@ -130,6 +128,7 @@
             color: white;
             font-family: "Orbitron", sans-serif;
             font-weight: bold;
+            max-height:7vh;
             width: 100%;
             display: flex;           
             align-items: center;         
@@ -171,7 +170,7 @@
             height:6vh;
             min-width:8vw;
             color:white;
-            font-size:20px;
+            font-size:1.1vw;
             margin-top:-5px;
             font-family:'Orbitron', sans-serif;
             font-weight:bold;
@@ -186,9 +185,23 @@
             filter:brightness(0.7);
             transform:translateY(1px);
         }
+        #option_button {
+            cursor:pointer;
+            font-size:1.1vw;
+            width:10vw;
+            height:4.5vh;
+            border:none;
+            border-radius:2px;
+            background-color:white;
+            margin-left:2vw;
+            margin-right:2vw;
+            color:black;
+            font-weight:bold;
+            font-family:'Orbitron', sans-serif;
+        }
         #gender_button {
             cursor:pointer;
-            font-size:20px;
+            font-size:1.1vw;
             width:10vw;
             height:4.5vh;
             border:none;
@@ -202,7 +215,7 @@
             display: none;
         }
         #updt_file_name {
-            font-size:14px;
+            font-size:0.85vw;
             font-style:italic;
             color:rgb(255, 51, 0);
         }
@@ -212,30 +225,31 @@
             <h1 id="main-title-h">AMOGUSOR - A Moonshot Masterpiece, by SakAm</h1>
         </div>
 
-        <div id="options-div">
-            <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
-                {% csrf_token %}
-                <input type="hidden" name="gd_setting" value="photo">
-                <button id="gender_button" type="submit">
-                    <i>Photo</i>
-                </button>
-            </form>
-
-            <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
-                {% csrf_token %}    
-                <input type="hidden" name="gd_setting" value="video">
-                <button id="gender_button" type="submit">
-                    <i>Video</i>
-                </button>
-            </form>
-        </div>   
-
         <div id="info-box">
+            <p>Choose a filetype :</p>
+            <div id="options-div">
+                <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="gd_setting" value="photo">
+                    <button id="option_button" type="submit">
+                        <i>Photo</i>
+                    </button>
+                </form>
+
+                <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
+                    {% csrf_token %}    
+                    <input type="hidden" name="gd_setting" value="video">
+                    <button id="option_button" type="submit">
+                        <i>Video</i>
+                    </button>
+                </form>
+            </div>   
+
             <!--File things-->
-            <p>Upload a {{Specifities.filetype}} to sussify : </p>
+            <p>Upload a {{Specifities.filetype}} to sussify :</p>
             <form method="POST" enctype="multipart/form-data" action="{% url 'choose_file' %}">
                 {% csrf_token %}
-                <input id="file_button" name="file" type="file" accept="image/*" style="display: none;">
+                <input id="file_button" name="file" type="file" accept="{{Specifities.accFileType}}/*" style="display: none;">
                 <label for="file_button" class="choose_file_button">Choose a file !</label> 
                 <button class="upload_file_button" type="submit">Upload</button>
             </form>
@@ -244,47 +258,47 @@
 
             <!--Image Controls-->
             <p style="margin-top:10px;">Choose the size of the amoguses (smaller size == better quality or "resolution" but takes longer to generate) :</p>
-            <p style="font-size:14px;margin-top:10px;">Current Size : {{Specifities.resolution}}px</p>
+            <p style="font-size:0.85vw;margin-top:10px;">Current Size : {{Specifities.resolution}}px</p>
             <div id="resolution_buttons" style="display:flex;flex-direction:row;align-items: center;justify-content: space-around;gap:10px;">
                 <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
                 {% csrf_token %}
                 <input type="hidden" name="gd_setting" value="8">
-                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:1.1vw;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
                 8
                 </button>
                 </form>
                 <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
                 {% csrf_token %}
                 <input type="hidden" name="gd_setting" value="12">
-                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:1.1vw;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
                 12
                 </button>
                 </form>
                 <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
                 {% csrf_token %}
                 <input type="hidden" name="gd_setting" value="16">
-                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:1.1vw;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
                 16
                 </button>
                 </form>
                 <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
                 {% csrf_token %}
                 <input type="hidden" name="gd_setting" value="32">
-                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:1.1vw;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
                 32
                 </button>
                 </form>
                 <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
                 {% csrf_token %}
                 <input type="hidden" name="gd_setting" value="48">
-                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:1.1vw;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
                 48
                 </button>
                 </form>
                 <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
                 {% csrf_token %}
                 <input type="hidden" name="gd_setting" value="64">
-                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:1.1vw;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
                 64
                 </button>
                 </form>
@@ -301,10 +315,10 @@
 
         <div id="contact">
             <a class="icon-link" target="_blank" href="https://github.com/Sak-288/AMOGUSOR" aria-label="GitHub">
-                <img src="{% static 'webapp/github-logo.png' %}" alt="Github Repo" width="60" height="60">
+                <img src="{% static 'webapp/github-logo.png' %}" alt="Github Repo" width="66vw" height="66vw">
             </a>
             <a class="icon-link" href="/contact" aria-label="Contact">
-                <img src="{% static 'webapp/email-logo.png' %}" alt="Contactez-nous" width="60" height="60">
+                <img src="{% static 'webapp/email-logo.png' %}" alt="Contactez-nous" width="75vw" height="75vw">
             </a>
         </div>
         <script>
