@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from .image_hasher import hash_image
 from .video_hasher import create_video_from_images_optimized
 from django.core.files.storage import FileSystemStorage
+from .remove_test import remove_everything
 import os
 
 GLOBAL_FILETYPE = "file"
@@ -92,6 +93,7 @@ def contact(request):
     return render(request, 'webapp/contact.html')
 
 def generate(request):
+    remove_everything() # Deletes everything previously present in usage directory before new generation
     global GLOBAL_FILETYPE
     global GLOBAL_RESOLUTION
     dir = "media/my_uploads/"

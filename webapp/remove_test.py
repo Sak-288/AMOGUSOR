@@ -1,11 +1,15 @@
 import os
 import shutil
 
-if os.path.exists("final_version.mp4"):
-    os.remove("final_version.mp4")
-if os.path.exists("final_video.mp4"):
-    os.remove("final_video.mp4")
-if os.path.exists("video.mp3"):
-    os.remove("video.mp3")
-if os.path.exists("extracted_frames"):
-    shutil.rmtree("extracted_frames")
+
+def remove_everything():
+    if os.path.exists("usage/"):
+        for entry in os.scandir('usage/'):
+            try:
+                os.remove(entry)
+            except IsADirectoryError:
+                for subentry in os.scandir(entry):
+                    os.remove(subentry)
+
+
+remove_everything()
