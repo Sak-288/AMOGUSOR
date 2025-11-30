@@ -66,7 +66,7 @@ def choose_resolution(request):
             GLOBAL_RESOLUTION = "32"
 
         chronology_issue = "The file has been downloaded"
-        returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, filename=chronology_issue, isLoader="none")}
+        returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, filename=chronology_issue, isLoader="grid")}
         return render(request, 'webapp/home.html', returnDict)
     else:
         return redirect('/home')
@@ -103,13 +103,13 @@ def generate(request):
         hash_image(dir + entry_list[0].name, int(GLOBAL_RESOLUTION))
 
         accessPath = "webapp/static/webapp/final_image.jpg"
-        returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, doneFilePath=accessPath, isLoader="flex")}
+        returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, doneFilePath=accessPath, isLoader="none")}
     elif GLOBAL_FILETYPE == "video":
         entry_list = [x for x in os.scandir(dir)]
         create_video_from_images_optimized("usage/output.mp4", dir + entry_list[0].name, int(GLOBAL_RESOLUTION), "usage/extracted_frames")
         
         accessPath = "webapp/static/webapp/final_version_with_audio.mp4"
-        returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, doneFilePath=accessPath, isLoader="flex")}
+        returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, doneFilePath=accessPath, isLoader="none")}
     else:
         return redirect('/home')
     return render(request, 'webapp/home.html', returnDict)

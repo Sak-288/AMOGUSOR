@@ -241,9 +241,7 @@
             height:65%;
             width:auto;
         }
-        {% csrf_token %}
         .loader{
-            display:"{{Specifites.isLoader}}";
             margin-top:1vw;
             width: 2vw;
             height: 4vw;
@@ -369,10 +367,10 @@
             </form>
 
             <!--Display Doneso File-->
+            {% csrf_token %}
             <div id="display_file">       
-                {% csrf_token %}
                 <p style="color:white;font-style:italic;font-weight:bold;text-decoration:underline;font-size:15px;">Your file : </p>
-                <div class="loader" type="hidden"></div>
+                <div style="display:{{Specifities.isLoader}};" class="loader"></div>
                 <img id="actual_image" src="{% static 'webapp/final_image.jpg' %}" onerror="this.style.display='none'"/>
                 <video controls id="actual_image" src="{% static 'webapp/final_version_with_audio.mp4' %}" onerror="this.style.display='none'"></video>
             </div>
@@ -390,7 +388,7 @@
             // Save scroll position before leaving or reloading the page
             window.addEventListener("beforeunload", () => {
                 sessionStorage.setItem("scrollPos", window.scrollY);
-            });
+            });           
 
             // Restore scroll position on load
             window.addEventListener("load", () => {
