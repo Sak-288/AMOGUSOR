@@ -212,6 +212,24 @@
             <h1 id="main-title-h">AMOGUSOR - A Moonshot Masterpiece, by SakAm</h1>
         </div>
 
+        <div id="options-div">
+            <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="photo">
+                <button id="gender_button" type="submit">
+                    <i>Photo</i>
+                </button>
+            </form>
+
+            <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
+                {% csrf_token %}    
+                <input type="hidden" name="gd_setting" value="video">
+                <button id="gender_button" type="submit">
+                    <i>Video</i>
+                </button>
+            </form>
+        </div>   
+
         <div id="info-box">
             <!--File things-->
             <p>Upload a {{Specifities.filetype}} to sussify : </p>
@@ -223,24 +241,6 @@
             </form>
 
             <p id="updt_file_name">Selected file : {{Specifities.filename}}</p>
-
-            <div id="options-div">
-                <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="gd_setting" value="photo">
-                    <button id="gender_button" type="submit">
-                        <i>Photo</i>
-                    </button>
-                </form>
-
-                <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
-                    {% csrf_token %}    
-                    <input type="hidden" name="gd_setting" value="video">
-                    <button id="gender_button" type="submit">
-                        <i>Video</i>
-                    </button>
-                </form>
-            </div>   
 
             <!--Image Controls-->
             <p style="margin-top:10px;">Choose the size of the amoguses (smaller size == better quality or "resolution" but takes longer to generate) :</p>

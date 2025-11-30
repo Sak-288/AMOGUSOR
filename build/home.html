@@ -1,0 +1,325 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+        <link rel="icon" type="image/x-icon" href="{% static 'webapp/sus.ico' %}">
+        <title>AMOGUSOR</title>
+    </head>
+    <body>
+        <style>
+        body {
+            background-image:url("{% static 'webapp/wallpaper.gif' %}");
+            background-size:1920px 1018px;
+            background-repeat: repeat;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            font-family: "Orbitron", sans-serif;
+            overflow-x: hidden;
+            position:relative;
+        }
+
+        #info-box{
+            position:absolute;
+            top:53%;
+            left:50%;
+            transform:translate(-50%, -50%);
+            background-color: rgba(50, 50, 50, 0.99);
+            border-radius: 5px;
+            height:65vh;
+            width:90vw;
+            margin: 0px auto;
+            padding: 1.5vw;
+            box-sizing: border-box;
+            color:white;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.99);
+            font-size:18px;
+            font-weight:bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .upload_file_button {
+            font-family:'Orbitron', sans-serif;
+            font-size:16px;
+            font-weight:bold;
+            transition-duration:0.1s;
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+            background-color: #00d435;
+            color: white;
+            border: 1px solid #00d435;
+            border-radius: 2px;
+        }
+
+        .upload_file_button:hover {
+            filter: brightness(1.3);
+            transform: translateY(-1px);
+        }
+
+        .upload_file_button:active {
+            filter: brightness(0.7);
+            transform: translateY(1px);
+        }
+
+        .choose_file_button {
+            font-family:'Orbitron', sans-serif;
+            font-size:16px;
+            font-weight:bold;
+            transition-duration:0.1s;
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+            background-color: #008cff;
+            color: white;
+            border: 1px solid #008cff;
+            border-radius: 2px;
+        }
+
+        .choose_file_button:hover {
+            filter: brightness(1.3);
+            transform: translateY(-1px);
+        }
+
+        .choose_file_button:active {
+            filter: brightness(0.7);
+            transform: translateY(1px);
+        }
+
+        #main-title-div {
+            background-color: white;
+            border-radius: 2px;
+            max-width:90%;
+            margin: 0px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #main-title-h {
+            text-decoration: underline;
+            color: black;
+            font-size: 2vw;
+            font-weight: bold;
+            margin: 1vh 0;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        #options-div {
+            color: white;
+            background-color: black;
+            border-radius: 5px;
+            width: 50%;
+            height:6%;
+            margin: 0px auto;
+            display: flex;
+            justify-content: space-around;
+            align-items:center;
+            gap: 0%;
+            font-weight: bold;
+            font-size: 12px;
+            padding: 0.25vh;
+        }
+        #contact {
+            background-color: rgba(50, 50, 50, 0.99);
+            color: white;
+            font-family: "Orbitron", sans-serif;
+            font-weight: bold;
+            width: 100%;
+            display: flex;           
+            align-items: center;         
+            justify-content:space-around;
+            gap:0%;
+            padding: 1vh 0;
+            position:absolute;
+            bottom:0%;
+        }
+
+        .icon-link {
+            display: inline-block;
+            text-decoration: none;
+            transition: filter 0.2s ease, transform 0.1s ease;
+        }
+
+        .icon-link:focus {
+            outline: 2px solid cyan;
+            border-radius: 4px;
+        }
+
+        .icon-link img {
+            display: block;
+        }
+
+        .icon-link:hover {
+            filter: brightness(1.3);
+            transform: translateY(-1px);
+        }
+
+        .icon-link:active {
+            transform: translateY(0);
+        }
+        #generate_button{
+            background-color:#008cff;
+            border-radius:3px;
+            border:none;
+            box-shadow:0 0 15 rgba(255, 255, 255, 0.99);
+            height:6vh;
+            min-width:8vw;
+            color:white;
+            font-size:20px;
+            margin-top:-5px;
+            font-family:'Orbitron', sans-serif;
+            font-weight:bold;
+            cursor:pointer;
+            transition-duration:0.1s;
+        }
+        #generate_button:hover{
+            filter:brightness(1.3);
+            transform:translateY(-1px);
+        }
+        #generate_button:active{
+            filter:brightness(0.7);
+            transform:translateY(1px);
+        }
+        #gender_button {
+            cursor:pointer;
+            font-size:20px;
+            width:10vw;
+            height:4.5vh;
+            border:none;
+            border-radius:2px;
+            background-color:white;
+            color:black;
+            font-weight:bold;
+            font-family:'Orbitron', sans-serif;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        #updt_file_name {
+            font-size:14px;
+            font-style:italic;
+            color:rgb(255, 51, 0);
+        }
+        </style>
+        <!-- Main Title -->
+        <div id="main-title-div">
+            <h1 id="main-title-h">AMOGUSOR - A Moonshot Masterpiece, by SakAm</h1>
+        </div>
+
+        <div id="info-box">
+            <!--File things-->
+            <p>Upload a {{Specifities.filetype}} to sussify : </p>
+            <form method="POST" enctype="multipart/form-data" action="{% url 'choose_file' %}">
+                {% csrf_token %}
+                <input id="file_button" name="file" type="file" accept="image/*" style="display: none;">
+                <label for="file_button" class="choose_file_button">Choose a file !</label> 
+                <button class="upload_file_button" type="submit">Upload</button>
+            </form>
+
+            <p id="updt_file_name">Selected file : {{Specifities.filename}}</p>
+
+            <div id="options-div">
+                <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="gd_setting" value="photo">
+                    <button id="gender_button" type="submit">
+                        <i>Photo</i>
+                    </button>
+                </form>
+
+                <form id="gd_setting" method="POST" action="{% url 'choose_setting' %}">
+                    {% csrf_token %}    
+                    <input type="hidden" name="gd_setting" value="video">
+                    <button id="gender_button" type="submit">
+                        <i>Video</i>
+                    </button>
+                </form>
+            </div>   
+
+            <!--Image Controls-->
+            <p style="margin-top:10px;">Choose the size of the amoguses (smaller size == better quality or "resolution" but takes longer to generate) :</p>
+            <p style="font-size:14px;margin-top:10px;">Current Size : {{Specifities.resolution}}px</p>
+            <div id="resolution_buttons" style="display:flex;flex-direction:row;align-items: center;justify-content: space-around;gap:10px;">
+                <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="8">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                8
+                </button>
+                </form>
+                <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="12">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                12
+                </button>
+                </form>
+                <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="16">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                16
+                </button>
+                </form>
+                <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="32">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                32
+                </button>
+                </form>
+                <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="48">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                48
+                </button>
+                </form>
+                <form id="gd_setting" method="POST" action="{% url 'choose_resolution' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting" value="64">
+                <button id="gender_button" type="submit" style="cursor:pointer;font-size:20px;width:10vw;height:4.5vh;border:none;border-radius:2px;background-color:white;color:black;font-weight:bold;font-family:'Orbitron', sans-serif;">
+                64
+                </button>
+                </form>
+            </div>
+            <br/>
+            <br/>
+            <!--GENERATE BUTTON // ACTUAL BACKEND LAUNCH-->
+            <form id="gd_setting" method="POST" action="{% url 'generate' %}">
+                {% csrf_token %}
+                <input type="hidden" name="gd_setting">
+                <button type="submit" id="generate_button">Generate</button>
+            </form>
+        </div>
+
+        <div id="contact">
+            <a class="icon-link" target="_blank" href="https://github.com/Sak-288/AMOGUSOR" aria-label="GitHub">
+                <img src="{% static 'webapp/github-logo.png' %}" alt="Github Repo" width="60" height="60">
+            </a>
+            <a class="icon-link" href="/contact" aria-label="Contact">
+                <img src="{% static 'webapp/email-logo.png' %}" alt="Contactez-nous" width="60" height="60">
+            </a>
+        </div>
+        <script>
+            // Save scroll position before leaving or reloading the page
+            window.addEventListener("beforeunload", () => {
+                sessionStorage.setItem("scrollPos", window.scrollY);
+            });
+
+            // Restore scroll position on load
+            window.addEventListener("load", () => {
+                const scrollPos = sessionStorage.getItem("scrollPos");
+                if (scrollPos !== null) {
+                    window.scrollTo(0, parseInt(scrollPos));
+                }
+            });
+        </script>
+    </body>
+</html>
