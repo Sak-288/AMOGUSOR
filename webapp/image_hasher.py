@@ -83,5 +83,5 @@ def hash_image(img, res):
             result[y_start:y_end, x_start:x_end] = patch_img
 
     img = Image.fromarray(result)
-    img.show()
+    img.save("webapp/static/webapp/final_image.jpg")
     return result

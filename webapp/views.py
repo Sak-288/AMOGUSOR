@@ -7,27 +7,31 @@ from .video_hasher import create_video_from_images_optimized
 from django.core.files.storage import FileSystemStorage
 from .remove_test import remove_everything
 import os
+from django.core.mail import send_mail 
+from django.conf import settings
 
 GLOBAL_FILETYPE = "file"
 GLOBAL_RESOLUTION = "32"
 
 def home(request):
+    remove_everything()
     noFileMessage = "No file has been selected yet"
-    returnDict = {'Specifities':SimpleNamespace(filetype="file", resolution=GLOBAL_RESOLUTION, filename=noFileMessage)}
+    returnDict = {'Specifities':SimpleNamespace(filetype="file", resolution=GLOBAL_RESOLUTION, filename=noFileMessage, isLoader="none")}
     global GLOBAL_FILETYPE
-    GLOBAL_FILETYPE = "file"
     return render(request, "webapp/home.html", returnDict)
  
 def home_video(request):
+    remove_everything()
     noFileMessage = "No file has been selected yet"
-    returnDict = {'Specifities':SimpleNamespace(filetype="video", resolution=GLOBAL_RESOLUTION, filename=noFileMessage, accFileType="video")}
+    returnDict = {'Specifities':SimpleNamespace(filetype="video", resolution=GLOBAL_RESOLUTION, filename=noFileMessage, accFileType="video", isLoader="none")}
     global GLOBAL_FILETYPE
     GLOBAL_FILETYPE = "video"
     return render(request, "webapp/home.html", returnDict)
-
+      
 def home_photo(request):
+    remove_everything()
     noFileMessage = "No file has been selected yet"
-    returnDict = {'Specifities':SimpleNamespace(filetype="photo", resolution=GLOBAL_RESOLUTION, filename=noFileMessage, accFileType="image")}
+    returnDict = {'Specifities':SimpleNamespace(filetype="photo", resolution=GLOBAL_RESOLUTION, filename=noFileMessage, accFileType="image", isLoader="none")}
     global GLOBAL_FILETYPE
     GLOBAL_FILETYPE = "photo"
     return render(request, "webapp/home.html", returnDict)
@@ -61,12 +65,9 @@ def choose_resolution(request):
         else:
             GLOBAL_RESOLUTION = "32"
 
-        if GLOBAL_FILETYPE == "file":
-            return redirect('/home')
-        elif GLOBAL_FILETYPE == "photo":
-            return redirect('/home_photo')
-        elif GLOBAL_FILETYPE == "video":
-            return redirect('/home_video')
+        chronology_issue = "The file has been downloaded"
+        returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, filename=chronology_issue, isLoader="none")}
+        return render(request, 'webapp/home.html', returnDict)
     else:
         return redirect('/home')
 
@@ -100,12 +101,18 @@ def generate(request):
     if GLOBAL_FILETYPE == "photo":
         entry_list = [x for x in os.scandir(dir)]
         hash_image(dir + entry_list[0].name, int(GLOBAL_RESOLUTION))
+
+        accessPath = "webapp/static/webapp/final_image.jpg"
+        returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, doneFilePath=accessPath, isLoader="flex")}
     elif GLOBAL_FILETYPE == "video":
         entry_list = [x for x in os.scandir(dir)]
         create_video_from_images_optimized("usage/output.mp4", dir + entry_list[0].name, int(GLOBAL_RESOLUTION), "usage/extracted_frames")
+        
+        accessPath = "webapp/static/webapp/final_version_with_audio.mp4"
+        returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, doneFilePath=accessPath, isLoader="flex")}
     else:
         return redirect('/home')
-    return redirect('/home')
+    return render(request, 'webapp/home.html', returnDict)
 
 def choose_file(request):
     if request.method == "POST":
@@ -120,8 +127,8 @@ def choose_file(request):
             fs = FileSystemStorage()
             filename = fs.save('my_uploads/' + uploaded_file.name, uploaded_file) 
 
-            returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, filename=uploaded_file.name)}
+            returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, filename=uploaded_file.name, isLoader="none")}
         else:
             noFileMessage = "Error in file choosing"
-            returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, filename=noFileMessage)}
+            returnDict = {'Specifities':SimpleNamespace(filetype=GLOBAL_FILETYPE, resolution=GLOBAL_RESOLUTION, filename=noFileMessage, isLoader="none")}
     return render(request, 'webapp/home.html', returnDict)

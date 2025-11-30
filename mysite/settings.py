@@ -40,15 +40,15 @@ CSRF_TRUSTED_ORIGINS = [
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '192.168.1.65', '192.168.1.81', '127.0.0.1', '105.155.41.35', 'smashorpassthebill.up.railway.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'smashorpassthebill.up.railway.app'] # You'll need a new railway projects + link
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # or your email provider
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'aminesakoute288@gmail.com'
-EMAIL_HOST_PASSWORD = 'dyjoykuccseccnbm'
-DEFAULT_FROM_EMAIL = 'aminesakoute288@gmail.com'
+EMAIL_HOST_USER = 'aminesakoute288@gmail.com' # This needs to be replaced by env values asp
+EMAIL_HOST_PASSWORD = 'dyjoykuccseccnbm' # This needs to be replaced by env values asp
+DEFAULT_FROM_EMAIL = 'aminesakoute288@gmail.com' # This needs to be replaced by env values asp
 
 # Application definition
 

@@ -167,6 +167,6 @@ def create_video_from_images_optimized(output_video_path, input_video_path, reso
     dir = "usage/"
     # Mix audio with video
     print("Combining audio with video...")
-    combine_audio(dir + "output.mp4", dir + "video.mp3", dir + "final_version_with_audio.mp4", fps=fps)
+    combine_audio(dir + "output.mp4", dir + "video.mp3", "webapp/static/webapp/final_version_with_audio.mp4", fps=fps)
     
     print("Process completed successfully!")
