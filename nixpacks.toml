@@ -1,2 +1,0 @@
-[phases.setup]
-nixPkgs = ["glibc", "pkg-config", "libGL"]
