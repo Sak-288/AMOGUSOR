@@ -7,13 +7,15 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # 3. Install System Dependencies (THE FIX IS HERE)
-# We need libpq-dev for PostgreSQL, and libgl1 (or libgl1-mesa-glx) for OpenCV (cv2).
+# We need libpq-dev for PostgreSQL, libgl1 for libGL.so.1, and libglib2.0-0 for libgthread-2.0.so.0
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        # Dependencies for PostgreSQL (libpq-dev)
+        # Dependencies for PostgreSQL
         libpq-dev \
         # Dependencies for OpenCV (libGL.so.1)
         libgl1 \
+        # Dependencies for OpenCV (libgthread-2.0.so.0)
+        libglib2.0-0 \
         # Clean up to keep image size small
     && rm -rf /var/lib/apt/lists/*
 
