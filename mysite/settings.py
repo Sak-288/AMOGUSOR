@@ -34,13 +34,13 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 SECRET_KEY = 'django-insecure-h@(p^+aupyqyf9=%j+w6+r4kr%zt9gl^^18swmptqc0x8rrj-d'
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://smashorpassthebill.up.railway.app",
+    "https://AMOGUSOR.up.railway.app",
 ]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'smashorpassthebill.up.railway.app'] # You'll need a new railway projects + link
+ALLOWED_HOSTS = ['127.0.0.1', 'AMOGUSOR.up.railway.app'] # You'll need a new railway projects + link
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
