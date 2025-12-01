@@ -90,7 +90,6 @@ def contact(request):
         )
 
         return redirect('/home')
-
     return render(request, 'webapp/contact.html')
 
 def generate(request):
