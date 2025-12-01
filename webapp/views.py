@@ -119,6 +119,11 @@ def choose_file(request):
         if uploaded_file:
             destination_path = "media/my_uploads/"
 
+            if not os.path.exists(destination_path):
+                os.makedirs(destination_path, exist_ok=True) 
+
+            for filepath in os.scandir(destination_path):
+                os.remove(filepath)
             for filepath in os.scandir(destination_path):
                 os.remove(filepath)
             
