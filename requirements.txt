@@ -22,3 +22,4 @@ sqlparse==0.5.3
 tqdm==4.67.1
 WebOb==1.8.9
 whitenoise==6.11.0
+                    
