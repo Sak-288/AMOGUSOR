@@ -366,12 +366,11 @@
                 <p style="color:white;font-style:italic;font-weight:bold;text-decoration:underline;font-size:15px;">Your file : </p>
                 <div style="display:{{Specifities.isLoader}};" class="loader"></div>
 
-                {% if {{Specifities.filetype == "video"}} %}
-                    <video controls id="actual_image" src="{% static 'webapp/final_version_with_audio.mp4' %}" onerror="this.style.display='none'"></video>
-                {% elif {{Specifities.filetype}} == "photo" %}
-                    <img id="actual_image" src="{% static 'webapp/final_image.jpg' %}" onerror="this.style.display='none'"/>
+                {% if Specifities.filetype == "video" %}  <video controls id="actual_image" src="{% static 'webapp/final_version_with_audio.mp4' %}" onerror="this.style.display='none'"></video>
+                {% elif Specifities.filetype == "photo" %} <img id="actual_image" src="{% static 'webapp/final_image.jpg' %}" onerror="this.style.display='none'"/>
                 {% else %}
                     <div style="display:{{Specifities.isLoader}};" class="loader"></div>
+                {% endif %} </div>
             </div>
         </div>
 
