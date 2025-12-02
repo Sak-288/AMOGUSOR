@@ -81,13 +81,13 @@ def contact(request):
         message = f"""Name  {name} 
     Email : <{email}> :\n\n{subject}"""
 
-        send_mail(
+        """send_mail(
             subject=f"Smash or Pass - Message de {name}",
             message=message,
             from_email=settings.EMAIL_HOST_USER,  # authenticated sender
             recipient_list=[settings.EMAIL_HOST_USER],  # send to yourself
             fail_silently=False,
-        )
+        )"""
 
         return redirect('/home')
     return render(request, 'webapp/contact.html')
