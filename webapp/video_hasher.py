@@ -2,7 +2,7 @@ import cv2
 import os
 import moviepy
 from moviepy import VideoFileClip, AudioFileClip
-from .pregened_generator import blur_image
+from pregened_generator import blur_image
 import numpy as np
 import threading
 from PIL import Image
@@ -10,8 +10,8 @@ from concurrent.futures import ThreadPoolExecutor
 import tempfile
 from collections import OrderedDict
 
-# This is an blurring alternative
-from .image_hasher import hash_image
+# This is a blurring alternative
+from image_hasher import hash_image
 
 def extract_audio(mp4_file, mp3_file, output_folder):
     """Extract audio in background"""
@@ -124,8 +124,7 @@ def create_video_from_images_optimized(output_video_path, input_video_path, reso
     
     print(f"Processing {len(temp_images)} frames with resolution {resolution}...")
     
-    # Use more workers for better parallelism
-    num_workers = min(os.cpu_count(), 8)  # Cap at 8 workers
+    num_workers = min(os.cpu_count(), 4)  # Cap at 8 workers
     batch_size = max(1, len(temp_images) // (num_workers * 2))  # Smaller batches for better load balancing
     
     frames_processed = 0
@@ -170,3 +169,10 @@ def create_video_from_images_optimized(output_video_path, input_video_path, reso
     combine_audio(dir + "output.mp4", dir + "video.mp3", "webapp/static/webapp/final_version_with_audio.mp4", fps=fps)
     
     print("Process completed successfully!")
+
+
+dir = "media/my_uploads/"
+entry_list = [x for x in os.scandir(dir)]
+create_video_from_images_optimized("usage/output.mp4", dir + entry_list[0].name, 16, "usage/extracted_frames")
+accessPath = "webapp/static/webapp/final_version_with_audio.mp4"
+

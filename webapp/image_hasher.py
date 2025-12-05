@@ -1,16 +1,20 @@
-from .pregened_generator import blur_image
+from pregened_generator import blur_image
 from PIL import Image
 from PIL import Image, ImageDraw
 import numpy as np
 import time
 import random as rd
 from concurrent.futures import ThreadPoolExecutor
-from .check_originality import check_fast
+from check_originality import check_fast
 import threading
 import os
 
 def det_best(color, resolution):
     b, g, r = color # BGR for image, RGB for video -- Don't have an explication, just roll with it
+    if len(color) == 3:
+        b, g, r = color
+    elif len(color) == 4:
+        b, g, r, alpha = color
     r = int(r/16) * 16
     g = int(g/16) * 16
     b = int(b/16) * 16
