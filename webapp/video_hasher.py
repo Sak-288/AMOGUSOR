@@ -2,7 +2,7 @@ import cv2
 import os
 import moviepy
 from moviepy import VideoFileClip, AudioFileClip
-from pregened_generator import blur_image
+from .pregened_generator import blur_image
 import numpy as np
 import threading
 from PIL import Image

@@ -2,11 +2,11 @@ from PIL import Image, ImageDraw
 import time
 import numpy as np
 import os
-from pre_gen_amoguses import create_blank, iterate
+from .pre_gen_amoguses import create_blank, iterate
 import cv2
 import random as rd
 from concurrent.futures import ThreadPoolExecutor
-from check_originality import check_fast
+from .check_originality import check_fast
 import json
 import threading
 

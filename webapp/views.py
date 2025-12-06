@@ -2,10 +2,10 @@ import django
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from types import SimpleNamespace
-from image_hasher import hash_image
-from video_hasher import create_video_from_images_optimized
+from .image_hasher import hash_image
+from .video_hasher import create_video_from_images_optimized
 from django.core.files.storage import FileSystemStorage
-from remove_test import remove_everything
+from .remove_test import remove_everything
 import os
 from django.core.mail import send_mail 
 from django.conf import settings

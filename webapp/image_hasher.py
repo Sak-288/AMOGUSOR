@@ -1,11 +1,11 @@
-from pregened_generator import blur_image
+from .pregened_generator import blur_image
 from PIL import Image
 from PIL import Image, ImageDraw
 import numpy as np
 import time
 import random as rd
 from concurrent.futures import ThreadPoolExecutor
-from check_originality import check_fast
+from .check_originality import check_fast
 import threading
 import os
 
