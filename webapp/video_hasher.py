@@ -11,7 +11,7 @@ import tempfile
 from collections import OrderedDict
 
 # This is a blurring alternative
-from image_hasher import hash_image
+from .image_hasher import hash_image
 
 def extract_audio(mp4_file, mp3_file, output_folder):
     """Extract audio in background"""
