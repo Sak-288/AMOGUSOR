@@ -171,8 +171,8 @@ def create_video_from_images_optimized(output_video_path, input_video_path, reso
     print("Process completed successfully!")
 
 
-dir = "media/my_uploads/"
-entry_list = [x for x in os.scandir(dir)]
+dir = "media/my_uploads"
+entry_list = [x for x in os.scandir(dir)] 
 create_video_from_images_optimized("usage/output.mp4", dir + entry_list[0].name, 16, "usage/extracted_frames")
 accessPath = "webapp/static/webapp/final_version_with_audio.mp4"
 
